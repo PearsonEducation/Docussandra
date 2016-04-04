@@ -1,0 +1,4 @@
+#!/bin/bash
+echo "postrm"
+set -x
+echo "No postrm steps."

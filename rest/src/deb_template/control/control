@@ -1,0 +1,8 @@
+Package: [[name]]-VERSION
+Version: [[version]]
+Section: misc
+Priority: low
+Architecture: all
+Description: Docussandra-VERSION
+Maintainer: Jeffrey DeYoung <jeffrey.deyoung@pearson.com>
+Distribution: development

@@ -1,0 +1,6 @@
+#!/bin/bash
+echo "preinst"
+set -x
+mkdir /home/appuser/docussandra-rest-VERSION
+chown -R appuser:appuser /home/appuser/docussandra-rest-VERSION
+echo "preinst done"

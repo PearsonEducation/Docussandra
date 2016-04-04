@@ -1,0 +1,285 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <name>Docussandra-Parent</name>
+    <description>Docussandra Parent</description>
+    <url>https://github.com/tfredrich/docussandra</url>
+    <groupId>com.pearson.docussandra</groupId>
+    <artifactId>docussandra-parent</artifactId>
+    <version>1.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    
+    <distributionManagement>
+        <repository>
+            <id>Pearson-Nexus-Releases</id>
+            <name>Pearson-Nexus-Releases</name>
+            <url>https://devops-tools.pearson.com/nexus-master/content/repositories/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>Pearson-Nexus-Snapshots</id>
+            <name>Pearson-Nexus-Snapshots</name>
+            <url>https://devops-tools.pearson.com/nexus-deps/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>docussandra-snapshots</id>
+            <name>Docussandra Snapshot Artifacts</name>
+            <url>http://devops-tools.pearson.com/nexus-deps/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
+            <id>docussandra-releases</id>
+            <name>Docussandra Released Artifacts</name>
+            <url>http://devops-tools.pearson.com/nexus-master/content/repositories/releases/</url>
+        </repository>
+    </repositories>
+	
+    <modules>
+        <module>docussandra-domain</module>
+        <module>cassandra</module>
+        <module>cli</module>
+        <module>rest</module>
+        <module>integration_test</module>
+    </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <type>jar</type>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>allow-snapshots</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <repositories>
+                <repository>
+                    <id>oss-snapshots</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                    <releases>
+                        <enabled>false</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+        </profile>
+        <profile>
+            <id>collect-metrics</id>
+            <activation>
+                <!-- Test if this build is running on Jenkins; if so, activate profile.
+                Of course, using another CI tool would cause problems here. -->
+                <property>
+                    <name>JENKINS_HOME</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>0.7.4.201502262128</version>
+                        <executions>
+                            <execution>
+                                <id>default-prepare-agent</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>default-report</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>default-check</id>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                                <configuration>
+                                    <!-- don't fail the build by default -->
+                                    <haltOnFailure>false</haltOnFailure>
+                                    <rules>
+                                        <!-- this configuration is documented here:
+                                        http://www.eclemma.org/jacoco/trunk/doc/check-mojo.html#rules -->
+                                        <!-- the implementation attribute is needed only for Maven 2  -->
+                                        <rule implementation="org.jacoco.maven.RuleConfiguration">
+                                            <element>BUNDLE</element>
+                                            <limits>
+                                                <!-- the implementation attribute is needed only for Maven 2  -->
+                                                <limit implementation="org.jacoco.report.check.Limit">
+                                                    <counter>INSTRUCTION</counter>
+                                                    <value>COVEREDRATIO</value>
+                                                    <minimum>0.60</minimum>
+                                                </limit>
+                                                <!-- the implementation attribute is needed only for Maven 2  -->
+                                                <limit implementation="org.jacoco.report.check.Limit">
+                                                    <counter>CLASS</counter>
+                                                    <value>MISSEDCOUNT</value>
+                                                    <maximum>0</maximum>
+                                                </limit>
+                                            </limits>
+                                        </rule>
+                                    </rules>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-pmd-plugin</artifactId>
+                        <version>3.5</version>
+                        <configuration>
+                            <sourceEncoding>utf-8</sourceEncoding>
+                            <minimumTokens>100</minimumTokens>
+                            <targetJdk>1.6</targetJdk>
+                            <includes>
+                                <include>com/pearson/**/*.java</include>
+                            </includes>
+                            <excludeRoots>
+                                <excludeRoot>target/generated-sources/*</excludeRoot>
+                            </excludeRoots>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>default-perform-pmd</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>pmd</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>default-perform-cpd</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>cpd</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>findbugs-maven-plugin</artifactId>
+                        <version>3.0.1</version>
+                        <configuration>
+                            <findbugsXmlOutput>true</findbugsXmlOutput>
+                            <xmlOutput>true</xmlOutput>
+                            <onlyAnalyze>com.pearson.-</onlyAnalyze>
+                            <!-- don't fail the build by default -->
+                            <failOnError>false</failOnError>
+                            <includeTests>true</includeTests>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>default-findbugs</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>findbugs</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <version>2.16</version>
+                        <configuration>
+                            <includes>**/*.java</includes>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>default-checkstyle</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>checkstyle</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+  
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.0</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.2</version>
+                <configuration>
+                    <tagNameFormat>v@{project.version}</tagNameFormat>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-scm-plugin</artifactId>
+                        <version>1.9.4</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.3</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.0</version>
+            </plugin>
+        </plugins>
+    </reporting>
+
+    <issueManagement>
+        <system>JIRA</system>
+        <url>http://jira.pearsoncmg.com/jira/secure/RapidBoard.jspa?rapidView=15961</url>
+    </issueManagement>
+
+    <scm>
+        <url>git@bitbucket.pearson.com/doc/docussandra.git</url>
+        <connection>scm:git:ssh://git@bitbucket.pearson.com/doc/docussandra.git</connection>
+        <developerConnection>scm:git:ssh://git@bitbucket.pearson.com/doc/docussandra.git</developerConnection>
+        <tag>v1.0</tag>
+    </scm>
+
+
+    <developers>
+        <developer>
+            <id>tfredrich</id>
+            <name>Todd Fredrich</name>
+            <email>tfredrich@gmail.com</email>
+        </developer>
+        <developer>
+            <id>JeffreyDeYoung</id>
+            <name>Jeffrey DeYoung</name>
+        </developer>
+    </developers>
+</project>

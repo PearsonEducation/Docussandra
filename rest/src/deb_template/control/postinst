@@ -1,0 +1,39 @@
+#!/bin/bash
+echo "postinst"
+set -x
+#A post-compile maven job will replace "V-E-R-S-I-O-N" with the actual version deployed
+
+# Create the logging directory
+LOG_DIRECTORY=/var/log/docussandra/
+mkdir -p $LOG_DIRECTORY
+chown appuser:appuser $LOG_DIRECTORY
+#probably not strictly needed
+LOG_FILE1=$LOG_DIRECTORY/docussandra-VERSION.log
+LOG_FILE2=$LOG_DIRECTORY/docussandra-VERSION.json
+touch $LOG_FILE1
+touch $LOG_FILE2
+chown appuser:appuser $LOG_FILE1
+chown appuser:appuser $LOG_FILE2
+#end probably not strictly needed
+
+# Set the directory permissions
+chown appuser:appuser /home/appuser/*
+cd /home/appuser/docussandra-rest-VERSION
+#extract the jar file
+jar -xf /home/appuser/docussandra-rest-VERSION/docussandra-rest-jar-with-dependencies.jar
+#hack the log4j.properties to log to a version specific file
+find . -type f -name log4j.properties -exec sed -i 's/docussandra.log/docussandra-VERSION.log/g' {} +
+#delete the old jar file
+rm -f /home/appuser/docussandra-rest-VERSION/docussandra-rest-jar-with-dependencies.jar
+#recreate the jar file with the fixed properties
+jar -cfM /home/appuser/docussandra-rest-VERSION/docussandra-rest-jar-with-dependencies.jar *
+
+# Stop the service if its running
+if [ -f /var/run/docussandraVERSION.pid ];
+then
+   stop docussandra-rest-VERSION
+fi
+
+# Start the service
+start docussandra-rest-VERSION
+echo "postinst done."

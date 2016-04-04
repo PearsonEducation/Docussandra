@@ -1,0 +1,5 @@
+#!/bin/bash
+echo "prerm"
+set -x
+rm -rf /home/appuser/docussandra-rest-VERSION
+echo "prerm done"
