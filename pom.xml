@@ -41,6 +41,7 @@
         <module>cli</module>
         <module>rest</module>
         <module>integration_test</module>
+        <module>plugin</module>
     </modules>
 
     <dependencies>

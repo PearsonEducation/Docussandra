@@ -55,28 +55,26 @@ public class Main
 {
 
     private static final String SERVICE_NAME = "Docussandra API";
-    private static final Logger LOG = LoggerFactory.getLogger(SERVICE_NAME);
-//    private static Authenticator piAuthenticator;
-//    private static PiAuthenticationPreprocessor preprocessor;
+    private static final Logger logger = LoggerFactory.getLogger(SERVICE_NAME);
 
     public static void main(String[] args) throws Exception
     {
         try
         {
             RestExpress server = initializeServer(args);
-            LOG.info("Server started up on port: " + server.getPort() + "!");
+            logger.info("Server started up on port: " + server.getPort() + "!");
             server.awaitShutdown();
             Runtime.getRuntime().addShutdownHook(new Thread(new Runnable()
             {
                 public void run()
                 {
-                    LOG.info("Shutting down Docussandra...");
+                    logger.info("Shutting down Docussandra...");
                     CacheFactory.shutdownCacheManger();
                 }
             }, "Shutdown-thread"));
         } catch (RuntimeException e)
         {
-            LOG.error("Runtime exception when starting/running Docussandra/RestExpress. Could not start.", e);
+            logger.error("Runtime exception when starting/running Docussandra/RestExpress. Could not start.", e);
         }
     }
 
@@ -87,7 +85,7 @@ public class Main
         //Identifiers.UUID.useShortUUID(true);
 
         Configuration config = loadEnvironment(args);
-        LOG.info("-----Attempting to start up Docussandra server for version: " + config.getProjectVersion() + "-----");
+        logger.info("-----Attempting to start up Docussandra server for version: " + config.getProjectVersion() + "-----");
         RestExpress server = new RestExpress()
                 .setName(config.getProjectName(SERVICE_NAME))
                 .setBaseUrl(config.getBaseUrl())
@@ -112,7 +110,6 @@ public class Main
 //        //required pi security
 //        piAuthenticator = getKeyMapAuthenticator(config.getSecurityConfig());
 //        preprocessor = new PiAuthenticationPreprocessor(piAuthenticator);
-
         if (config.getPort() == 0)
         {//no port? calculate it off of the version number
             server.setPort(calculatePort(config.getProjectVersion()));
@@ -121,7 +118,7 @@ public class Main
             server.setPort(config.getPort());
         }
         server.bind(server.getPort());
-        LOG.info("-----Docussandra server initialized for version: " + config.getProjectVersion() + "-----");
+        logger.info("-----Docussandra server initialized for version: " + config.getProjectVersion() + "-----");
         return server;
     }
 
@@ -205,11 +202,11 @@ public class Main
                 reporter.start(mc.getPublishSeconds(), TimeUnit.SECONDS);
             } else
             {
-                LOG.warn("*** Graphite Metrics Publishing is Disabled ***");
+                logger.warn("*** Graphite Metrics Publishing is Disabled ***");
             }
         } else
         {
-            LOG.warn("*** Metrics Generation is Disabled ***");
+            logger.warn("*** Metrics Generation is Disabled ***");
         }
     }
 
@@ -225,10 +222,10 @@ public class Main
     private static Configuration loadEnvironment(String[] args)
             throws FileNotFoundException, IOException
     {
-        LOG.info("Loading environment with " + args.length + " arguments.");
+        logger.info("Loading environment with " + args.length + " arguments.");
         if (args.length > 0)
         {
-            LOG.info("-args[0]: " + args[0]);
+            logger.info("-args[0]: " + args[0]);
             if (args[0].startsWith("http") || args[0].startsWith("HTTP"))//if we are fetching props by URL
             {
                 Configuration config = new Configuration();
@@ -287,7 +284,7 @@ public class Main
                         rd.close();
                     } catch (IOException e)
                     {
-                        LOG.debug("Could not close BufferedReader...", e);
+                        logger.debug("Could not close BufferedReader...", e);
                     }
                 }
                 if (isr != null)
@@ -297,7 +294,7 @@ public class Main
                         isr.close();
                     } catch (IOException e)
                     {
-                        LOG.debug("Could not close InputStreamReader...", e);
+                        logger.debug("Could not close InputStreamReader...", e);
                     }
                 }
                 request.reset();
@@ -305,5 +302,4 @@ public class Main
         }
         return properties;
     }
-
 }

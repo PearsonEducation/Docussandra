@@ -9,6 +9,7 @@ import static org.junit.Assert.*;
 
 /**
  * Unit tests for the main class
+ *
  * @author https://github.com/JeffreyDeYoung
  */
 public class MainUnitTest
