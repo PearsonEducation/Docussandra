@@ -40,7 +40,7 @@ public enum FieldDataType
      *
      * @return The Cassandra datatype for this FieldDataType.
      */
-    public String mapToCassandaraDataType()
+    public String mapToCassandaraDataType() //TODO: consider switching this over to a switch statement.
     {
         if (this.equals(TEXT))
         {
