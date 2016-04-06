@@ -6,10 +6,12 @@ import com.pearson.docussandra.domain.objects.Document;
  * Interface that gets called anytime a document gets mutated. We <b>warned</b>:
  * This could happen quite frequently, and if you are not careful you could
  * substantially reduce the performance of Docussandra.
+ * 
+ * Although this is an abstract class, it should be treated like an interface.
  *
  * @author https://github.com/JeffreyDeYoung
  */
-public interface NotifierPluginInterface extends Plugin
+public abstract class NotifierPluginInterface implements Plugin
 {
 
     /**
@@ -31,5 +33,5 @@ public interface NotifierPluginInterface extends Plugin
      * @param document Updated document for this mutation. Will be null if the
      * mutation was a delete, be sure to check for null.
      */
-    public void doNotify(MutateType type, Document document);
+    public abstract void doNotify(MutateType type, Document document);
 }
