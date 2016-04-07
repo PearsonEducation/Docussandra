@@ -5,6 +5,8 @@ package com.pearson.docussandra.plugininterfaces;
  * plugins should <b>NOT</b> implement this directly, but instead should
  * implement one of the other provided interfaces that in turn implements this
  * class.
+ * 
+ * All implementing classes should be thread safe.
  *
  * @author https://github.com/JeffreyDeYoung
  */
