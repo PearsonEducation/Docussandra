@@ -6,6 +6,8 @@ import com.pearson.docussandra.plugininterfaces.SecurityPluginInterface;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class for holding our instantiated plugin classes.
@@ -14,6 +16,11 @@ import java.util.ArrayList;
  */
 public class PluginHolder
 {
+
+    /**
+     * Logger for this class.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(PluginHolder.class);
 
     /**
      * Static instance of this Plugin holder.
@@ -43,8 +50,10 @@ public class PluginHolder
      * builds this object. Warning, this is a very expensive operation so it
      * should (and can be) only be called once. Call getInstance() to get a
      * reference to this object after build();
-     * @param pluginJars All the plugin jars we wish to load for this instance of Docussandra.
-     * 
+     *
+     * @param pluginJars All the plugin jars we wish to load for this instance
+     * of Docussandra.
+     *
      * @return A newly created PluginHolder populated with all our plugins.
      * @throws MalformedURLException If there is a problem reading in the
      * plugins.
@@ -69,11 +78,15 @@ public class PluginHolder
         }
         for (Class<? extends Plugin> clazz : notifierClasses)
         {
-            notifierPlugins.add((NotifierPluginInterface) clazz.newInstance());
+            NotifierPluginInterface object = (NotifierPluginInterface) clazz.newInstance();
+            logger.info("Loading Notifier Plugin: " + object.getPluginName() + " of class type: " + object.getClass().getCanonicalName());
+            notifierPlugins.add(object);
         }
         for (Class<? extends Plugin> clazz : securityClasses)
         {
-            securityPlugins.add((SecurityPluginInterface) clazz.newInstance());
+            SecurityPluginInterface object = (SecurityPluginInterface) clazz.newInstance();
+            logger.info("Loading Security Plugin: " + object.getPluginName() + " of class type: " + object.getClass().getCanonicalName());
+            securityPlugins.add(object);
         }
         return instance;
     }
