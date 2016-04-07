@@ -6,7 +6,7 @@ package com.pearson.docussandra.plugininterfaces;
  * implement one of the other provided interfaces that in turn implements this
  * class.
  * 
- * All implementing classes should be thread safe.
+ * All implementing classes should be thread safe and provide a no argument constructor.
  *
  * @author https://github.com/JeffreyDeYoung
  */

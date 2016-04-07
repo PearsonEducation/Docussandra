@@ -9,7 +9,7 @@ import com.pearson.docussandra.domain.objects.Document;
  * 
  * Although this is an abstract class, it should be treated like an interface.
  * 
- * All implementing classes should be thread safe.
+ * All implementing classes should be thread safe and provide a no argument constructor.
  * 
  * Multiple implementations are allowed, however, they will run in an arbitrary order.
  *
