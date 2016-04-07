@@ -62,11 +62,11 @@ public class PluginUtilsTest
     public void testGetPluginsFromExternalJar() throws Exception
     {
         System.out.println("getPluginsFromExternalJar");
-        File deputyJar = new File("./src/test/resources", "plugin-test-notify.jar");
-        System.out.print("Looking for plugin jar at: " + deputyJar.getAbsolutePath());
-        assertTrue(deputyJar.exists());//make sure we can actually read from it
+        File pluginJar = new File("./src/test/resources", "plugin-test-notify.jar");
+        System.out.print("Looking for plugin jar at: " + pluginJar.getAbsolutePath());
+        assertTrue(pluginJar.exists());//make sure we can actually read from it
         Class moduleType = NotifierPluginInterface.class;
-        ArrayList<Class<? extends Plugin>> result = PluginUtils.getPluginsFromExternalJar(deputyJar, moduleType);
+        ArrayList<Class<? extends Plugin>> result = PluginUtils.getPluginsFromExternalJar(pluginJar, moduleType);
         assertNotNull(result);
         assertEquals(1, result.size());
         assertNotNull(result.get(0));
