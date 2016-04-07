@@ -21,6 +21,9 @@ import org.slf4j.LoggerFactory;
 public class PluginUtils
 {
 
+    /**
+     * Logger for this class.
+     */
     private static final Logger logger = LoggerFactory.getLogger(PluginUtils.class);
 
     /**
@@ -69,6 +72,7 @@ public class PluginUtils
             if (!Modifier.isAbstract(c.getModifiers()))//don't pick up abstract plugins, we can't implement them anyway
             {
                 toReturn.add(c);
+                logger.debug("Read class: " + c.getCanonicalName() + " from jar: " + pluginJar.getAbsolutePath());
             }
         }
         return toReturn;
