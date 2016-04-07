@@ -46,7 +46,7 @@ public class PluginUtils
     }
 
     /**
-     * For a specific jar file, this method will extract any implementing plugin
+     * For a specific jar file, this method will extract any implementing Plugin
      * classes of the specified type.
      *
      * @param pluginJar Plugin jar file from which to extract any concrete
