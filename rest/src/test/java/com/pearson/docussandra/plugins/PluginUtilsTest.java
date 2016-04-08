@@ -68,7 +68,7 @@ public class PluginUtilsTest
         Class moduleType = NotifierPluginInterface.class;
         ArrayList<Class<? extends Plugin>> result = PluginUtils.getPluginsFromExternalJar(pluginJar, moduleType);
         assertNotNull(result);
-        assertEquals(1, result.size());
+        assertEquals(2, result.size());
         assertNotNull(result.get(0));
         assertEquals(result.get(0).getCanonicalName(), "com.patriotcoder.testdocussandraplugin.TestNotifierPlugin");
     }
