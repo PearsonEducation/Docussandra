@@ -1,5 +1,8 @@
 package com.pearson.docussandra.controller;
 
+import com.pearson.docussandra.plugininterfaces.NotifierPluginInterface;
+import com.pearson.docussandra.plugininterfaces.SecurityPluginInterface;
+import com.pearson.docussandra.plugins.PluginHolder;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,7 +25,19 @@ public class BuildInfoController
         try
         {
             InputStream propsStream = this.getClass().getResourceAsStream("/git.properties");
-            String buildInfo = IOUtils.toString(propsStream);
+            StringBuilder buildInfo = new StringBuilder(IOUtils.toString(propsStream));
+            buildInfo.append("\n--------------\nActivated Plugins: \nNotifiers: \n");
+            PluginHolder ph = PluginHolder.getInstance();
+            for (NotifierPluginInterface plugin : ph.getNotifierPlugins())
+            {
+                buildInfo.append(plugin.getPluginName()).append(":").append(plugin.getClass().getCanonicalName()).append("\n");
+            }
+            buildInfo.append("Security: \n");
+            for (SecurityPluginInterface plugin : ph.getSecurityPlugins())
+            {
+                buildInfo.append(plugin.getPluginName()).append(":").append(plugin.getClass().getCanonicalName()).append("\n");
+            }
+            buildInfo.append("\n");
             LOGGER.debug("Get build info called: " + buildInfo);
             return buildInfo;
         } catch (IOException e)
