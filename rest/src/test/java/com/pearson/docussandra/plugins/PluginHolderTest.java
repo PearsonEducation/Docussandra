@@ -34,7 +34,13 @@ public class PluginHolderTest
         File pluginJar = new File("./src/test/resources", "plugin-test-notify.jar");
         File[] jars = new File[1];
         jars[0] = pluginJar;
-        ph = PluginHolder.build(jars);
+        try
+        {
+            ph = PluginHolder.build(jars);
+        } catch (IllegalStateException e)
+        {
+            ph = PluginHolder.getInstance();
+        }
     }
 
     @AfterClass

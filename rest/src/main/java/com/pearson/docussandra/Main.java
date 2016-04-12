@@ -30,6 +30,8 @@ import com.pearson.docussandra.config.Configuration;
 import com.pearson.docussandra.exception.DuplicateItemException;
 import com.pearson.docussandra.exception.InvalidObjectIdException;
 import com.pearson.docussandra.exception.ItemNotFoundException;
+import com.pearson.docussandra.plugins.PluginHolder;
+import com.pearson.docussandra.plugins.PluginUtils;
 import com.pearson.docussandra.serialization.SerializationProvider;
 import com.strategicgains.restexpress.plugin.metrics.MetricsConfig;
 import com.strategicgains.restexpress.plugin.metrics.MetricsPlugin;
@@ -78,11 +80,13 @@ public class Main
         }
     }
 
-    public static RestExpress initializeServer(String[] args) throws IOException
+    public static RestExpress initializeServer(String[] args) throws IOException, IllegalAccessException, InstantiationException
     {
         //args = new String[]{"http://docussandra-dev-webw-1.openclass.com:8080/config/A"};
         RestExpress.setSerializationProvider(new SerializationProvider());
         //Identifiers.UUID.useShortUUID(true);
+        //load our plugins first
+        PluginHolder.build(PluginUtils.getPluginJars());
 
         Configuration config = loadEnvironment(args);
         logger.info("-----Attempting to start up Docussandra server for version: " + config.getProjectVersion() + "-----");
@@ -105,11 +109,8 @@ public class Main
         Routes.define(config, server);
         Relationships.define(server);
         configurePlugins(config, server);
-        mapExceptions(server);
-
-//        //required pi security
-//        piAuthenticator = getKeyMapAuthenticator(config.getSecurityConfig());
-//        preprocessor = new PiAuthenticationPreprocessor(piAuthenticator);
+        mapExceptions(server);        
+        
         if (config.getPort() == 0)
         {//no port? calculate it off of the version number
             server.setPort(calculatePort(config.getProjectVersion()));

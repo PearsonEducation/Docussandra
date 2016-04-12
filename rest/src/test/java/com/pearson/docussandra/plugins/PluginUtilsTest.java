@@ -70,7 +70,7 @@ public class PluginUtilsTest
         assertNotNull(result);
         assertEquals(2, result.size());
         assertNotNull(result.get(0));
-        assertEquals(result.get(0).getCanonicalName(), "com.patriotcoder.testdocussandraplugin.TestNotifierPlugin");
+        assertTrue(result.get(0).getCanonicalName().startsWith("com.patriotcoder.testdocussandraplugin.TestNotifierPlugin"));
     }
     
 }

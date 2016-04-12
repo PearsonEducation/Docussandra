@@ -16,10 +16,13 @@ import com.pearson.docussandra.domain.objects.Document;
 import com.pearson.docussandra.domain.objects.Identifier;
 import com.pearson.docussandra.domain.objects.LinkableDocument;
 import com.pearson.docussandra.exception.IndexParseException;
+import com.pearson.docussandra.plugininterfaces.NotifierPluginInterface;
+import com.pearson.docussandra.plugins.PluginHolder;
 import com.pearson.docussandra.service.DocumentService;
 import com.strategicgains.hyperexpress.HyperExpress;
 import com.strategicgains.hyperexpress.builder.TokenResolver;
 import com.strategicgains.hyperexpress.builder.UrlBuilder;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class DocumentController
@@ -28,11 +31,14 @@ public class DocumentController
     private static final UrlBuilder LOCATION_BUILDER = new UrlBuilder();
 
     private DocumentService documents;
+    
+    private ArrayList<NotifierPluginInterface> plugins;
 
     public DocumentController(DocumentService documentsService)
     {
         super();
         this.documents = documentsService;
+        this.plugins = PluginHolder.getInstance().getNotifierPlugins();
     }
 
     @ApiOperation(value = "create document",
