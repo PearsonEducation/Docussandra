@@ -13,6 +13,10 @@ import org.restexpress.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Displays the build info and loaded plugins on /admin/buildInfo.
+ * @author jeffrey
+ */
 public class BuildInfoController
 {
 
