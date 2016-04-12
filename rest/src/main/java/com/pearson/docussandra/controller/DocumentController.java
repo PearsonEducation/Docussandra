@@ -25,19 +25,32 @@ import com.strategicgains.hyperexpress.builder.UrlBuilder;
 import java.util.ArrayList;
 import java.util.UUID;
 
+/**
+ * Controller for manipulating and reading Documents.
+ * @author jeffrey
+ */
 public class DocumentController
 {
 
+    /**
+     * Location builder.
+     */
     private static final UrlBuilder LOCATION_BUILDER = new UrlBuilder();
 
-    private DocumentService documents;
+    /**
+     * DocumentService for this controller.
+     */
+    private DocumentService documentService;
     
+    /**
+     * Plugins that will be notified upon any document mutation.
+     */
     private ArrayList<NotifierPluginInterface> plugins;
 
     public DocumentController(DocumentService documentsService)
     {
         super();
-        this.documents = documentsService;
+        this.documentService = documentsService;
         this.plugins = PluginHolder.getInstance().getNotifierPlugins();
     }
 
@@ -58,8 +71,8 @@ public class DocumentController
 
         try
         {
-            Document saved = documents.create(database, table, data);
-
+            Document saved = documentService.create(database, table, data);
+            notifyPlugins(NotifierPluginInterface.MutateType.CREATE, saved);
             // Construct the response for create...
             response.setResponseCreated();
 
@@ -88,11 +101,11 @@ public class DocumentController
         String database = request.getHeader(Constants.Url.DATABASE, "No database provided");
         String table = request.getHeader(Constants.Url.TABLE, "No table provided");
         String id = request.getHeader(Constants.Url.DOCUMENT_ID, "No document ID supplied");
-        Document document = documents.read(database, table, new Identifier(database, table, UUID.fromString(id)));
+        Document document = documentService.read(database, table, new Identifier(database, table, UUID.fromString(id)));
 
         // enrich the entity with links, etc. here...
         HyperExpress.bind(Constants.Url.DOCUMENT_ID, document.getUuid().toString());
-
+        
         return new LinkableDocument(document);
     }
 
@@ -133,8 +146,9 @@ public class DocumentController
         document.setUuid(UUID.fromString(id));
         document.table(database, table);
         document.objectAsString(data);
-        documents.update(document);
+        documentService.update(document);
         response.setResponseNoContent();
+        notifyPlugins(NotifierPluginInterface.MutateType.UPDATE, document);
     }
 
     @ApiOperation(value = "read all the databases",
@@ -146,7 +160,14 @@ public class DocumentController
         String database = request.getHeader(Constants.Url.DATABASE, "No database provided");
         String table = request.getHeader(Constants.Url.TABLE, "No table provided");
         String id = request.getHeader(Constants.Url.DOCUMENT_ID, "No document ID supplied");
-        documents.delete(database, table, new Identifier(database, table, UUID.fromString(id)));
+        documentService.delete(database, table, new Identifier(database, table, UUID.fromString(id)));
         response.setResponseNoContent();
+        notifyPlugins(NotifierPluginInterface.MutateType.DELETE, null);
+    }
+    
+    private void notifyPlugins(NotifierPluginInterface.MutateType type, Document document){
+        for(NotifierPluginInterface plugin: plugins){
+            plugin.doNotify(type, document);
+        }
     }
 }
