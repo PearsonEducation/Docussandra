@@ -81,6 +81,7 @@ public class Main
             server.awaitShutdown();
             Runtime.getRuntime().addShutdownHook(new Thread(new Runnable()
             {
+                @Override
                 public void run()
                 {
                     logger.info("Shutting down Docussandra...");
