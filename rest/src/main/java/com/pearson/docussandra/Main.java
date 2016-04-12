@@ -53,12 +53,25 @@ import static io.netty.handler.codec.http.HttpHeaders.Names.*;
 import static io.netty.handler.codec.http.HttpHeaders.Names.LOCATION;
 import static org.restexpress.Flags.Auth.PUBLIC_ROUTE;
 
+/**
+ * Main class for this application. Starts up the app.
+ *
+ * @author jeffrey
+ */
 public class Main
 {
 
     private static final String SERVICE_NAME = "Docussandra API";
     private static final Logger logger = LoggerFactory.getLogger(SERVICE_NAME);
 
+    /**
+     * Main method.
+     *
+     * @param args Command line arguments. Should be one parameter with either
+     * an environment or a path to a URL with the proper configuration via a
+     * REST GET.
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception
     {
         try
@@ -80,6 +93,16 @@ public class Main
         }
     }
 
+    /**
+     * Starts up the server for the specified environment.
+     * @param args Command line arguments. Should be one parameter with either
+     * an environment or a path to a URL with the proper configuration via a
+     * REST GET.
+     * @return A running RestExpress REST server.
+     * @throws IOException
+     * @throws IllegalAccessException
+     * @throws InstantiationException 
+     */
     public static RestExpress initializeServer(String[] args) throws IOException, IllegalAccessException, InstantiationException
     {
         //args = new String[]{"http://docussandra-dev-webw-1.openclass.com:8080/config/A"};
@@ -109,8 +132,8 @@ public class Main
         Routes.define(config, server);
         Relationships.define(server);
         configurePlugins(config, server);
-        mapExceptions(server);        
-        
+        mapExceptions(server);
+
         if (config.getPort() == 0)
         {//no port? calculate it off of the version number
             server.setPort(calculatePort(config.getProjectVersion()));
@@ -167,6 +190,11 @@ public class Main
 
     }
 
+    /**
+     * Configures RestExpress plugins (not Docussandra plugins).
+     * @param config Configuration object.
+     * @param server RestExpress server object.
+     */
     private static void configurePlugins(Configuration config, RestExpress server)
     {
         configureMetrics(config, server);
