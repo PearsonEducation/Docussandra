@@ -27,7 +27,7 @@ import java.util.UUID;
 
 /**
  * Controller for manipulating and reading Documents.
- * @author jeffrey
+ * @author https://github.com/JeffreyDeYoung
  */
 public class DocumentController
 {

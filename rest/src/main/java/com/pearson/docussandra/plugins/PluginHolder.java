@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Class for holding our instantiated plugin classes.
  *
- * @author jeffrey
+ * @author https://github.com/JeffreyDeYoung
  */
 public class PluginHolder
 {

@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author jeffrey
+ * @author https://github.com/JeffreyDeYoung
  */
 public class PluginHolderTest
 {

@@ -55,8 +55,6 @@ import static org.restexpress.Flags.Auth.PUBLIC_ROUTE;
 
 /**
  * Main class for this application. Starts up the app.
- *
- * @author jeffrey
  */
 public class Main
 {

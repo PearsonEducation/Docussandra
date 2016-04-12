@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Displays the build info and loaded plugins on /admin/buildInfo.
- * @author jeffrey
+ * @author https://github.com/JeffreyDeYoung
  */
 public class BuildInfoController
 {
