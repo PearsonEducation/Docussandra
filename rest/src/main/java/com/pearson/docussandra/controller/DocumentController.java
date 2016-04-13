@@ -27,6 +27,7 @@ import java.util.UUID;
 
 /**
  * Controller for manipulating and reading Documents.
+ *
  * @author https://github.com/JeffreyDeYoung
  */
 public class DocumentController
@@ -41,12 +42,19 @@ public class DocumentController
      * DocumentService for this controller.
      */
     private DocumentService documentService;
-    
+
     /**
-     * Plugins that will be notified upon any document mutation.
+     * Plugins that will be notified upon any document mutation. Normally we
+     * would do this work in the service layer, however, we don't have the
+     * concept of a plugin in the Cassandra project.
      */
     private ArrayList<NotifierPluginInterface> plugins;
 
+    /**
+     * Constructor.
+     *
+     * @param documentsService DocumentService to interact with.
+     */
     public DocumentController(DocumentService documentsService)
     {
         super();
@@ -54,6 +62,13 @@ public class DocumentController
         this.plugins = PluginHolder.getInstance().getNotifierPlugins();
     }
 
+    /**
+     * Entry point for a Document create request.
+     *
+     * @param request
+     * @param response
+     * @return The created document.
+     */
     @ApiOperation(value = "create document",
             notes = "This method creates a document",
             response = Document.class)
@@ -72,7 +87,7 @@ public class DocumentController
         try
         {
             Document saved = documentService.create(database, table, data);
-            notifyPlugins(NotifierPluginInterface.MutateType.CREATE, saved);
+            notifyAllPlugins(NotifierPluginInterface.MutateType.CREATE, saved);
             // Construct the response for create...
             response.setResponseCreated();
 
@@ -92,6 +107,13 @@ public class DocumentController
         }
     }
 
+    /**
+     * Entry point for a Document read request.
+     *
+     * @param request
+     * @param response
+     * @return The requested document.
+     */
     @ApiOperation(value = "read document",
             notes = "This will return the details of the document provided in the route",
             response = Document.class)
@@ -105,7 +127,7 @@ public class DocumentController
 
         // enrich the entity with links, etc. here...
         HyperExpress.bind(Constants.Url.DOCUMENT_ID, document.getUuid().toString());
-        
+
         return new LinkableDocument(document);
     }
 
@@ -125,7 +147,12 @@ public class DocumentController
 //
 //		return service.readAll(database, collection);
 //	}
-
+    /**
+     * Entry point for a Document update request.
+     *
+     * @param request
+     * @param response
+     */
     @ApiOperation(value = "update a document",
             notes = "This route should be used to update the details of the document",
             response = Document.class)
@@ -148,9 +175,15 @@ public class DocumentController
         document.objectAsString(data);
         documentService.update(document);
         response.setResponseNoContent();
-        notifyPlugins(NotifierPluginInterface.MutateType.UPDATE, document);
+        notifyAllPlugins(NotifierPluginInterface.MutateType.UPDATE, document);
     }
 
+    /**
+     * Entry point for a Document delete request.
+     *
+     * @param request
+     * @param response
+     */
     @ApiOperation(value = "read all the databases",
             notes = "delete the document Warning: once the document is deleted cant be restored",
             response = Database.class)
@@ -162,11 +195,18 @@ public class DocumentController
         String id = request.getHeader(Constants.Url.DOCUMENT_ID, "No document ID supplied");
         documentService.delete(database, table, new Identifier(database, table, UUID.fromString(id)));
         response.setResponseNoContent();
-        notifyPlugins(NotifierPluginInterface.MutateType.DELETE, null);
+        notifyAllPlugins(NotifierPluginInterface.MutateType.DELETE, null);
     }
-    
-    private void notifyPlugins(NotifierPluginInterface.MutateType type, Document document){
-        for(NotifierPluginInterface plugin: plugins){
+
+    /**
+     * Method to notify all the Notifier plugins that a specific mutation has occurred.
+     * @param type Type of mutation.
+     * @param document Document in it's present post-mutation state. 
+     */
+    private void notifyAllPlugins(NotifierPluginInterface.MutateType type, Document document)
+    {
+        for (NotifierPluginInterface plugin : plugins)
+        {
             plugin.doNotify(type, document);
         }
     }
