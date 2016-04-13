@@ -1,7 +1,7 @@
 package com.pearson.docussandra.controller;
 
-import com.pearson.docussandra.plugininterfaces.NotifierPluginInterface;
-import com.pearson.docussandra.plugininterfaces.SecurityPluginInterface;
+import com.pearson.docussandra.plugininterfaces.NotifierPlugin;
+import com.pearson.docussandra.plugininterfaces.SecurityPlugin;
 import com.pearson.docussandra.plugins.PluginHolder;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import java.io.IOException;
@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Displays the build info and loaded plugins on /admin/buildInfo.
+ *
  * @author https://github.com/JeffreyDeYoung
  */
 public class BuildInfoController
@@ -32,12 +33,12 @@ public class BuildInfoController
             StringBuilder buildInfo = new StringBuilder(IOUtils.toString(propsStream));
             buildInfo.append("\n--------------\nActivated Plugins: \nNotifiers: \n");
             PluginHolder ph = PluginHolder.getInstance();
-            for (NotifierPluginInterface plugin : ph.getNotifierPlugins())
+            for (NotifierPlugin plugin : ph.getNotifierPlugins())
             {
                 buildInfo.append(plugin.getPluginName()).append(":").append(plugin.getClass().getCanonicalName()).append("\n");
             }
             buildInfo.append("Security: \n");
-            for (SecurityPluginInterface plugin : ph.getSecurityPlugins())
+            for (SecurityPlugin plugin : ph.getSecurityPlugins())
             {
                 buildInfo.append(plugin.getPluginName()).append(":").append(plugin.getClass().getCanonicalName()).append("\n");
             }
