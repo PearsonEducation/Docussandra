@@ -1,6 +1,6 @@
 package com.pearson.docussandra.plugins;
 
-import com.pearson.docussandra.plugininterfaces.NotifierPluginInterface;
+import com.pearson.docussandra.plugininterfaces.NotifierPlugin;
 import com.pearson.docussandra.plugininterfaces.Plugin;
 import java.io.File;
 import java.util.ArrayList;
@@ -65,7 +65,7 @@ public class PluginUtilsTest
         File pluginJar = new File("./src/test/resources", "plugin-test-notify.jar");
         System.out.print("Looking for plugin jar at: " + pluginJar.getAbsolutePath());
         assertTrue(pluginJar.exists());//make sure we can actually read from it
-        Class moduleType = NotifierPluginInterface.class;
+        Class moduleType = NotifierPlugin.class;
         ArrayList<Class<? extends Plugin>> result = PluginUtils.getPluginsFromExternalJar(pluginJar, moduleType);
         assertNotNull(result);
         assertEquals(2, result.size());

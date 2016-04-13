@@ -1,7 +1,7 @@
 package com.pearson.docussandra.plugins;
 
-import com.pearson.docussandra.plugininterfaces.NotifierPluginInterface;
-import com.pearson.docussandra.plugininterfaces.SecurityPluginInterface;
+import com.pearson.docussandra.plugininterfaces.NotifierPlugin;
+import com.pearson.docussandra.plugininterfaces.SecurityPlugin;
 import java.io.File;
 import java.util.ArrayList;
 import org.junit.After;
@@ -99,17 +99,17 @@ public class PluginHolderTest
     public void testGetNotifierPlugins()
     {
         System.out.println("getNotifierPlugins");
-        ArrayList<NotifierPluginInterface> result = ph.getNotifierPlugins();
+        ArrayList<NotifierPlugin> result = ph.getNotifierPlugins();
         assertNotNull(result);
         assertFalse(result.isEmpty());
         //make sure the plugin is able to be used
-        NotifierPluginInterface plugin = result.get(0);
+        NotifierPlugin plugin = result.get(0);
         assertNotNull(plugin);
-        plugin.doNotify(NotifierPluginInterface.MutateType.DELETE, null);
+        plugin.doNotify(NotifierPlugin.MutateType.DELETE, null);
         //make sure the plugin is able to be used
-        NotifierPluginInterface plugin2 = result.get(1);
+        NotifierPlugin plugin2 = result.get(1);
         assertNotNull(plugin2);
-        plugin2.doNotify(NotifierPluginInterface.MutateType.DELETE, null);
+        plugin2.doNotify(NotifierPlugin.MutateType.DELETE, null);
     }
 
     /**
@@ -119,7 +119,7 @@ public class PluginHolderTest
     public void testGetSecurityPlugins()
     {
         System.out.println("getSecurityPlugins");
-        ArrayList<SecurityPluginInterface> result = ph.getSecurityPlugins();
+        ArrayList<SecurityPlugin> result = ph.getSecurityPlugins();
         assertNotNull(result);
         //TODO: Add more
     }

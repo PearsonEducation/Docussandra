@@ -1,8 +1,8 @@
 package com.pearson.docussandra.plugins;
 
-import com.pearson.docussandra.plugininterfaces.NotifierPluginInterface;
+import com.pearson.docussandra.plugininterfaces.NotifierPlugin;
 import com.pearson.docussandra.plugininterfaces.Plugin;
-import com.pearson.docussandra.plugininterfaces.SecurityPluginInterface;
+import com.pearson.docussandra.plugininterfaces.SecurityPlugin;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -30,12 +30,12 @@ public class PluginHolder
     /**
      * Instantiated Notifier plugins.
      */
-    private static ArrayList<NotifierPluginInterface> notifierPlugins = new ArrayList<>();
+    private static ArrayList<NotifierPlugin> notifierPlugins = new ArrayList<>();
 
     /**
      * Instantiated Notifier plugins.
      */
-    private static ArrayList<SecurityPluginInterface> securityPlugins = new ArrayList<>();
+    private static ArrayList<SecurityPlugin> securityPlugins = new ArrayList<>();
 
     /**
      * Private constructor (singleton).
@@ -73,18 +73,18 @@ public class PluginHolder
         ArrayList<Class<? extends Plugin>> securityClasses = new ArrayList<>();
         for (File pluginJar : pluginJars)
         {
-            notifierClasses.addAll(PluginUtils.getPluginsFromExternalJar(pluginJar, NotifierPluginInterface.class));
-            securityClasses.addAll(PluginUtils.getPluginsFromExternalJar(pluginJar, SecurityPluginInterface.class));
+            notifierClasses.addAll(PluginUtils.getPluginsFromExternalJar(pluginJar, NotifierPlugin.class));
+            securityClasses.addAll(PluginUtils.getPluginsFromExternalJar(pluginJar, SecurityPlugin.class));
         }
         for (Class<? extends Plugin> clazz : notifierClasses)
         {
-            NotifierPluginInterface object = (NotifierPluginInterface) clazz.newInstance();
+            NotifierPlugin object = (NotifierPlugin) clazz.newInstance();
             logger.info("Loading Notifier Plugin: " + object.getPluginName() + " of class type: " + object.getClass().getCanonicalName());
             notifierPlugins.add(object);
         }
         for (Class<? extends Plugin> clazz : securityClasses)
         {
-            SecurityPluginInterface object = (SecurityPluginInterface) clazz.newInstance();
+            SecurityPlugin object = (SecurityPlugin) clazz.newInstance();
             logger.info("Loading Security Plugin: " + object.getPluginName() + " of class type: " + object.getClass().getCanonicalName());
             securityPlugins.add(object);
         }
@@ -109,7 +109,7 @@ public class PluginHolder
     /**
      * @return the notifierPlugins
      */
-    public ArrayList<NotifierPluginInterface> getNotifierPlugins()
+    public ArrayList<NotifierPlugin> getNotifierPlugins()
     {
         return notifierPlugins;
     }
@@ -117,7 +117,7 @@ public class PluginHolder
     /**
      * @return the securityPlugins
      */
-    public ArrayList<SecurityPluginInterface> getSecurityPlugins()
+    public ArrayList<SecurityPlugin> getSecurityPlugins()
     {
         return securityPlugins;
     }

@@ -16,7 +16,7 @@ import com.pearson.docussandra.domain.objects.Document;
 import com.pearson.docussandra.domain.objects.Identifier;
 import com.pearson.docussandra.domain.objects.LinkableDocument;
 import com.pearson.docussandra.exception.IndexParseException;
-import com.pearson.docussandra.plugininterfaces.NotifierPluginInterface;
+import com.pearson.docussandra.plugininterfaces.NotifierPlugin;
 import com.pearson.docussandra.plugins.PluginHolder;
 import com.pearson.docussandra.service.DocumentService;
 import com.strategicgains.hyperexpress.HyperExpress;
@@ -48,7 +48,7 @@ public class DocumentController
      * would do this work in the service layer, however, we don't have the
      * concept of a plugin in the Cassandra project.
      */
-    private ArrayList<NotifierPluginInterface> plugins;
+    private ArrayList<NotifierPlugin> plugins;
 
     /**
      * Constructor.
@@ -87,7 +87,7 @@ public class DocumentController
         try
         {
             Document saved = documentService.create(database, table, data);
-            notifyAllPlugins(NotifierPluginInterface.MutateType.CREATE, saved);
+            notifyAllPlugins(NotifierPlugin.MutateType.CREATE, saved);
             // Construct the response for create...
             response.setResponseCreated();
 
@@ -175,7 +175,7 @@ public class DocumentController
         document.objectAsString(data);
         documentService.update(document);
         response.setResponseNoContent();
-        notifyAllPlugins(NotifierPluginInterface.MutateType.UPDATE, document);
+        notifyAllPlugins(NotifierPlugin.MutateType.UPDATE, document);
     }
 
     /**
@@ -195,7 +195,7 @@ public class DocumentController
         String id = request.getHeader(Constants.Url.DOCUMENT_ID, "No document ID supplied");
         documentService.delete(database, table, new Identifier(database, table, UUID.fromString(id)));
         response.setResponseNoContent();
-        notifyAllPlugins(NotifierPluginInterface.MutateType.DELETE, null);
+        notifyAllPlugins(NotifierPlugin.MutateType.DELETE, null);
     }
 
     /**
@@ -203,9 +203,9 @@ public class DocumentController
      * @param type Type of mutation.
      * @param document Document in it's present post-mutation state. 
      */
-    private void notifyAllPlugins(NotifierPluginInterface.MutateType type, Document document)
+    private void notifyAllPlugins(NotifierPlugin.MutateType type, Document document)
     {
-        for (NotifierPluginInterface plugin : plugins)
+        for (NotifierPlugin plugin : plugins)
         {
             plugin.doNotify(type, document);
         }

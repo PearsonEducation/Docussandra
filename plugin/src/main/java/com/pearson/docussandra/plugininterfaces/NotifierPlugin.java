@@ -15,7 +15,7 @@ import com.pearson.docussandra.domain.objects.Document;
  *
  * @author https://github.com/JeffreyDeYoung
  */
-public abstract class NotifierPluginInterface implements Plugin
+public abstract class NotifierPlugin implements Plugin
 {
 
     /**
