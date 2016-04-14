@@ -5,7 +5,6 @@ import com.pearson.docussandra.plugininterfaces.SecurityPlugin;
 import com.pearson.docussandra.plugininterfaces.SecurityPlugin.HttpMethod;
 import com.pearson.docussandra.plugins.PluginHolder;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import org.restexpress.Request;
 import org.restexpress.Response;
@@ -14,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Preproccessor that runs all of our security plugins against each request.
+ * Pre-proccessor that runs all of our security plugins against each request.
  *
  * @author https://github.com/JeffreyDeYoung
  */

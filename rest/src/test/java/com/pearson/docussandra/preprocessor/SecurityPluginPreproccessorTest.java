@@ -75,6 +75,9 @@ public class SecurityPluginPreproccessorTest
         Response response = null;
         SecurityPluginPreproccessor instance = new SecurityPluginPreproccessor();
         instance.process(request, response);
+        //check to see that our test plugins actually ran like we wanted them to (these properties are set in the test plugin)
+        assertEquals("test4", System.getProperty("com.pearson.docussandra.testHeader_2"));
+        assertEquals("test4", System.getProperty("com.pearson.docussandra.testHeader_2.secondtest"));
 
     }
 
