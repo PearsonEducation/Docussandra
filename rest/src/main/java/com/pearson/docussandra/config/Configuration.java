@@ -31,6 +31,7 @@ import com.pearson.docussandra.persistence.impl.IndexRepositoryImpl;
 import com.pearson.docussandra.persistence.impl.IndexStatusRepositoryImpl;
 import com.pearson.docussandra.persistence.impl.QueryRepositoryImpl;
 import com.pearson.docussandra.persistence.impl.TableRepositoryImpl;
+import com.pearson.docussandra.plugins.PluginHolder;
 import com.pearson.docussandra.service.DatabaseService;
 import com.pearson.docussandra.service.DocumentService;
 import com.pearson.docussandra.service.IndexService;
@@ -73,6 +74,7 @@ public class Configuration
     private BuildInfoController buildInfoController;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
+
     @Override
     public void fillValues(Properties p)
     {
@@ -80,7 +82,7 @@ public class Configuration
         this.baseUrl = p.getProperty(BASE_URL_PROPERTY, "http://localhost:" + String.valueOf(port));
         this.executorThreadPoolSize = Integer.parseInt(p.getProperty(EXECUTOR_THREAD_POOL_SIZE, DEFAULT_EXECUTOR_THREAD_POOL_SIZE));
         this.metricsSettings = new MetricsConfig(p);
-        this.replicationFactorString = p.getProperty(REPLICATION_PROPERTY, "{ 'class' : 'SimpleStrategy', 'replication_factor' : 1}");        
+        this.replicationFactorString = p.getProperty(REPLICATION_PROPERTY, "{ 'class' : 'SimpleStrategy', 'replication_factor' : 1}");
         try
         {
             //TODO: consider re-working this section
@@ -104,7 +106,7 @@ public class Configuration
 
     private void initialize(CassandraConfigWithGenericSessionAccess dbConfig)
     {
-        Utils.initDatabase(false, replicationFactorString, dbConfig.getGenericSession());//DO NOT SET THE FLAG TO TRUE; IT WILL ERASE EVERYTHING
+        Utils.initDatabase(false, replicationFactorString, dbConfig.getGenericSession());//DO NOT SET THE FLAG TO TRUE; IT WILL ERASE EVERYTHING (true is used for testing only in other places)
 
         DatabaseRepository databaseRepository = new DatabaseRepositoryImpl(dbConfig.getSession());
         TableRepository tableRepository = new TableRepositoryImpl(dbConfig.getSession());
@@ -115,7 +117,7 @@ public class Configuration
 
         DatabaseService databaseService = new DatabaseService(databaseRepository);
         TableService tableService = new TableService(databaseRepository, tableRepository);
-        DocumentService documentService = new DocumentService(tableRepository, documentRepository);
+        DocumentService documentService = new DocumentService(tableRepository, documentRepository, PluginHolder.getInstance().getNotifierPlugins());
         IndexService indexService = new IndexService(tableRepository, indexRepository, indexStatusRepository);
         QueryService queryService = new QueryService(databaseRepository, tableRepository, queryRepository);
 

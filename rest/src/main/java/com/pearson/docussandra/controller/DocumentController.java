@@ -16,13 +16,10 @@ import com.pearson.docussandra.domain.objects.Document;
 import com.pearson.docussandra.domain.objects.Identifier;
 import com.pearson.docussandra.domain.objects.LinkableDocument;
 import com.pearson.docussandra.exception.IndexParseException;
-import com.pearson.docussandra.plugininterfaces.NotifierPlugin;
-import com.pearson.docussandra.plugins.PluginHolder;
 import com.pearson.docussandra.service.DocumentService;
 import com.strategicgains.hyperexpress.HyperExpress;
 import com.strategicgains.hyperexpress.builder.TokenResolver;
 import com.strategicgains.hyperexpress.builder.UrlBuilder;
-import java.util.ArrayList;
 import java.util.UUID;
 
 /**
@@ -44,13 +41,6 @@ public class DocumentController
     private DocumentService documentService;
 
     /**
-     * Plugins that will be notified upon any document mutation. Normally we
-     * would do this work in the service layer, however, we don't have the
-     * concept of a plugin in the Cassandra project.
-     */
-    private ArrayList<NotifierPlugin> plugins;
-
-    /**
      * Constructor.
      *
      * @param documentsService DocumentService to interact with.
@@ -59,7 +49,6 @@ public class DocumentController
     {
         super();
         this.documentService = documentsService;
-        this.plugins = PluginHolder.getInstance().getNotifierPlugins();
     }
 
     /**
@@ -87,7 +76,6 @@ public class DocumentController
         try
         {
             Document saved = documentService.create(database, table, data);
-            notifyAllPlugins(NotifierPlugin.MutateType.CREATE, saved);
             // Construct the response for create...
             response.setResponseCreated();
 
@@ -175,7 +163,6 @@ public class DocumentController
         document.objectAsString(data);
         documentService.update(document);
         response.setResponseNoContent();
-        notifyAllPlugins(NotifierPlugin.MutateType.UPDATE, document);
     }
 
     /**
@@ -194,20 +181,8 @@ public class DocumentController
         String table = request.getHeader(Constants.Url.TABLE, "No table provided");
         String id = request.getHeader(Constants.Url.DOCUMENT_ID, "No document ID supplied");
         documentService.delete(database, table, new Identifier(database, table, UUID.fromString(id)));
-        response.setResponseNoContent();
-        notifyAllPlugins(NotifierPlugin.MutateType.DELETE, null);
+        response.setResponseNoContent();        
     }
 
-    /**
-     * Method to notify all the Notifier plugins that a specific mutation has occurred.
-     * @param type Type of mutation.
-     * @param document Document in it's present post-mutation state. 
-     */
-    private void notifyAllPlugins(NotifierPlugin.MutateType type, Document document)
-    {
-        for (NotifierPlugin plugin : plugins)
-        {
-            plugin.doNotify(type, document);
-        }
-    }
+
 }

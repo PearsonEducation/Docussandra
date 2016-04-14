@@ -2,6 +2,7 @@ package com.pearson.docussandra.preprocessor;
 
 import com.pearson.docussandra.plugininterfaces.PermissionDeniedException;
 import com.pearson.docussandra.plugininterfaces.SecurityPlugin;
+import com.pearson.docussandra.plugininterfaces.SecurityPlugin.HttpMethod;
 import com.pearson.docussandra.plugins.PluginHolder;
 import java.util.HashSet;
 import java.util.List;
@@ -39,30 +40,42 @@ public class SecurityPluginPreproccessor implements Postprocessor
 
     /**
      * Processes our request based on the security plugins.
+     *
      * @param request
-     * @param response 
+     * @param response
      */
     @Override
     public void process(Request request, Response response)
     {
-        //TODO: break this out into a seperate method 
-        HashSet<List<String>> headers = new HashSet<>();
-        for (String headerName : request.getHeaderNames())
-        {
-            headers.add(request.getHeaders(headerName));
-        }
-        //end break out
+        HashSet<List<String>> headers = extractHeadersFromRequest(request);
         for (SecurityPlugin plugin : securityPlugins)
         {
             logger.debug("Running security plugin: " + plugin.getPluginName());
             try
             {
-                plugin.doValidate(headers);
+                plugin.doValidate(headers, request.getPath(), HttpMethod.forString(request.getHttpMethod().name()));
             } catch (PermissionDeniedException e)
             {
                 throw new SecurityException(e.getMessage());
             }
         }
+    }
+
+    /**
+     * Extracts the headers from a org.restexpress.Request object and returns
+     * them as a HashSet containing a list of Strings.
+     *
+     * @param request Request to extract the headers from.
+     * @return A HashSet<List<String>> containing the headers.
+     */
+    public static HashSet<List<String>> extractHeadersFromRequest(Request request)
+    {
+        HashSet<List<String>> headers = new HashSet<>();
+        for (String headerName : request.getHeaderNames())
+        {
+            headers.add(request.getHeaders(headerName));
+        }
+        return headers;
     }
 
 }

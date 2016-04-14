@@ -18,10 +18,40 @@ import java.util.List;
  */
 public abstract class SecurityPlugin implements Plugin
 {
+
     /**
-     * Method that performs a validation based on the passed in headers. Should throw a PermissionDeniedException if the client is not authorized.
-     * @param headers Map of the headers.
-     * @throws PermissionDeniedException If the client is not authorized to make this call.
+     * Enum representing supported Http methods.
      */
-    public abstract void doValidate(HashSet<List<String>> headers) throws PermissionDeniedException;//TODO: Add path and type of call (GET, PUT, etc)
+    public enum HttpMethod
+    {
+        GET,
+        POST,
+        PUT,
+        DELETE;
+
+        /**
+         * Friendly method for getting the HttpMethod based off of a String.
+         * Cleans up the string so it should work regardless of case or extra
+         * whitespace.
+         *
+         * @param in String to convert to an HttpMethod.
+         * @return A HttpMethod based on the String.
+         */
+        public static HttpMethod forString(String in)
+        {
+            return HttpMethod.valueOf(in.toUpperCase().trim());
+        }
+    };
+
+    /**
+     * Method that performs a validation based on the passed in headers. Should
+     * throw a PermissionDeniedException if the client is not authorized.
+     *
+     * @param headers Map of the headers.
+     * @param requestedPath Path that is being requested.
+     * @param method Type of Http method that was requested.
+     * @throws PermissionDeniedException If the client is not authorized to make
+     * this call.
+     */
+    public abstract void doValidate(HashSet<List<String>> headers, String requestedPath, HttpMethod method) throws PermissionDeniedException;//TODO: Add path and type of call (GET, PUT, etc)
 }
