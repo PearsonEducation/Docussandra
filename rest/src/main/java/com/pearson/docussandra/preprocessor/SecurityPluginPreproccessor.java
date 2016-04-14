@@ -4,6 +4,7 @@ import com.pearson.docussandra.plugininterfaces.PermissionDeniedException;
 import com.pearson.docussandra.plugininterfaces.SecurityPlugin;
 import com.pearson.docussandra.plugininterfaces.SecurityPlugin.HttpMethod;
 import com.pearson.docussandra.plugins.PluginHolder;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import org.restexpress.Request;
@@ -47,7 +48,7 @@ public class SecurityPluginPreproccessor implements Postprocessor
     @Override
     public void process(Request request, Response response)
     {
-        HashSet<List<String>> headers = extractHeadersFromRequest(request);
+        HashMap<String, List<String>> headers = extractHeadersFromRequest(request);
         for (SecurityPlugin plugin : securityPlugins)
         {
             logger.debug("Running security plugin: " + plugin.getPluginName());
@@ -63,17 +64,17 @@ public class SecurityPluginPreproccessor implements Postprocessor
 
     /**
      * Extracts the headers from a org.restexpress.Request object and returns
-     * them as a HashSet containing a list of Strings.
+     * them as a HashMap containing a list of Strings.
      *
      * @param request Request to extract the headers from.
-     * @return A HashSet<List<String>> containing the headers.
+     * @return A HashMap<String, List<String>> containing the headers.
      */
-    public static HashSet<List<String>> extractHeadersFromRequest(Request request)
+    public static HashMap<String, List<String>> extractHeadersFromRequest(Request request)
     {
-        HashSet<List<String>> headers = new HashSet<>();
+        HashMap<String, List<String>> headers = new HashMap<>();
         for (String headerName : request.getHeaderNames())
         {
-            headers.add(request.getHeaders(headerName));
+            headers.put(headerName, request.getHeaders(headerName));
         }
         return headers;
     }

@@ -1,6 +1,6 @@
 package com.pearson.docussandra.plugininterfaces;
 
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -53,5 +53,5 @@ public abstract class SecurityPlugin implements Plugin
      * @throws PermissionDeniedException If the client is not authorized to make
      * this call.
      */
-    public abstract void doValidate(HashSet<List<String>> headers, String requestedPath, HttpMethod method) throws PermissionDeniedException;//TODO: Add path and type of call (GET, PUT, etc)
+    public abstract void doValidate(HashMap<String, List<String>> headers, String requestedPath, HttpMethod method) throws PermissionDeniedException;//TODO: Add path and type of call (GET, PUT, etc)
 }
