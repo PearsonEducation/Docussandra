@@ -42,7 +42,7 @@ To create a logical grouping of similar data we'll create a table. We can do thi
 Naming restrictions on the table name are similar to the database: unique *to the database* and in lower case. 
 
 ### Storing and Retrieving Data
-Storing information to Docussandra is simple. To add a JSON document to a table that you've created, POST the document to the table.  
+Storing information to Docussandra is simple. To add a JSON document to a table that you've created, POST the document to the table.
 > http://localhost:8081/databases/*{databaseName}*/tables/*{tablename}*/documents
 
 Suppose that we're interested in storing information about the appearances of various superhero characters in comics. First, we need to create the database with Docussandra:
@@ -109,7 +109,7 @@ To implement and use your own plugins in Docussandra, you must:
 3. Implement one or both of the provided interfaces (technically abstract classes): ```NotifierPlugin``` or ```SecurityPlugin```.
 4. Build your project with any dependencies into a jar.
 5. Rename the jar so that it starts with "plugin"; ensure it keeps it's .jar file extension.
-6. Drop the jar (or jars) into the home directory of the user that is running the Docussandra service/application. (Please note, order of execution of plugins is arbitrary, don't expect any ordering unless you provide this yourself. Also note that these plugins are executed synchronously as part of Docussandra's data flow, be cautious and mindful of performance.)
+6. Drop the jar (or jars) into the home directory of the user that is running the Docussandra service/application. Ensure that the permissions are correct for the user. (Please note, order of execution of plugins is arbitrary, don't expect any ordering unless you provide this yourself. Also note that these plugins are executed synchronously as part of Docussandra's data flow, be cautious and mindful of performance.)
 
 ### SecurityPlugins
 SecurityPlugins are executed prior to the processing of any (every) HTTP request. You will be provided a ```HashMap``` of HTTP headers, the requested path, and the HttpMethod that is being requested. You should throw a ```PermissionDeniedException``` if the user/client should receive an permissions error, be sure to catch and handle all other exceptions gracefully. Reminder be mindful of performance; some sort of caching is recommended. 
@@ -155,7 +155,7 @@ In chronological order by contribution:
 
 * Apache Usergrid (http://usergrid.apache.org/)
 
-## Liscense/Copyright
+## License/Copyright
 Copyright 2016 Pearson Education, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
