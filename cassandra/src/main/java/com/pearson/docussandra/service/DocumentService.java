@@ -37,9 +37,7 @@ public class DocumentService
     private final Cache tableCache = CacheFactory.getCache("tableExist");
 
     /**
-     * Plugins that will be notified upon any document mutation. Normally we
-     * would do this work in the service layer, however, we don't have the
-     * concept of a plugin in the Cassandra project.
+     * Plugins that will be notified upon any document mutation.
      */
     private ArrayList<NotifierPlugin> plugins;
 
