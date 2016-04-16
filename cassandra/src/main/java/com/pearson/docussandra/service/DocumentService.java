@@ -17,7 +17,7 @@ import net.sf.ehcache.Element;
 /**
  * Service for CRUD operations on documents.
  *
- * @author jeffrey
+ * @author https://github.com/JeffreyDeYoung
  */
 public class DocumentService
 {

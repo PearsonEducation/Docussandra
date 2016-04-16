@@ -58,7 +58,7 @@ public class Configuration
     private static final String EXECUTOR_THREAD_POOL_SIZE = "executor.threadPool.size";
 
     private int port;
-    private String baseUrl;
+    private String baseUrl;    
     private String replicationFactorString;
     private int executorThreadPoolSize;
     private MetricsConfig metricsSettings;
@@ -72,6 +72,11 @@ public class Configuration
     private QueryController queryController;
     private HealthCheckController healthController;
     private BuildInfoController buildInfoController;
+
+    /**
+     * Properties for this application.
+     */
+    private Properties properties;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
 
@@ -99,15 +104,29 @@ public class Configuration
         {
             LOGGER.error("Could not determine Cassandra IP.");
         }
-        CassandraConfigWithGenericSessionAccess dbConfig = new CassandraConfigWithGenericSessionAccess(p);
-        initialize(dbConfig);
+        this.properties = p;
         loadManifest();
     }
 
-    private void initialize(CassandraConfigWithGenericSessionAccess dbConfig)
+    /**
+     * Actually kicks off our object creation in order to make this object
+     * usable.
+     */
+    public void initialize(boolean initDb)
     {
-        Utils.initDatabase(false, replicationFactorString, dbConfig.getGenericSession());//DO NOT SET THE FLAG TO TRUE; IT WILL ERASE EVERYTHING (true is used for testing only in other places)
-
+        //Utils.initDatabase(false, replicationFactorString, dbConfig.getGenericSession());//DO NOT SET THE FLAG TO TRUE; IT WILL ERASE EVERYTHING (true is used for testing only in other places)
+        CassandraConfigWithGenericSessionAccess dbConfig = new CassandraConfigWithGenericSessionAccess(properties);
+//        try
+//        {
+            if (initDb)
+            {
+                //Utils.initDatabase("/docussandra_autoload.cql", dbConfig.getGenericSession());
+                Utils.initDatabase(false, replicationFactorString, dbConfig.getGenericSession());//DO NOT SET THE FLAG TO TRUE; IT WILL ERASE EVERYTHING (true is used for testing only in other places)
+            }
+//        } catch (IOException e)
+//        {
+//            LOGGER.error("Could not init database; trying to continue startup anyway (in case DB was manually created).", e);
+//        }
         DatabaseRepository databaseRepository = new DatabaseRepositoryImpl(dbConfig.getSession());
         TableRepository tableRepository = new TableRepositoryImpl(dbConfig.getSession());
         DocumentRepository documentRepository = new DocumentRepositoryImpl(dbConfig.getSession());
@@ -136,6 +155,18 @@ public class Configuration
                 .build();
         DomainEvents.addBus("local", bus);
 
+    }
+
+    /**
+     * An option, prior to calling initialize(), you can override the seed list
+     * for testing purposes.
+     *
+     * @param seeds Cassandra seeds that you wish to override with.
+     */
+    public void overrideSeeds(String seeds)
+    {
+        properties.setProperty("cassandra.contactPoints", seeds);
+        properties.setProperty("cassandra.port", "9042");
     }
 
     public int getPort()

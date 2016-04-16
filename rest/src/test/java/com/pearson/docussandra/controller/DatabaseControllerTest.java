@@ -2,7 +2,7 @@ package com.pearson.docussandra.controller;
 
 import com.pearson.docussandra.abstracttests.AbstractDatabaseControllerTest;
 import com.pearson.docussandra.testhelper.Fixtures;
-import testhelper.RestExpressManager;
+import com.pearson.docussandra.testhelper.RestExpressManager;
 
 /**
  * Functional tests for the database controller tests.

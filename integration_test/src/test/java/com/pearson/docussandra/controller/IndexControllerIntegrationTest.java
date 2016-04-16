@@ -2,7 +2,7 @@ package com.pearson.docussandra.controller;
 
 import com.pearson.docussandra.abstracttests.AbstractIndexControllerTest;
 import com.pearson.docussandra.testhelper.Fixtures;
-import testhelper.RestExpressManager;
+import com.pearson.docussandra.testhelper.RestExpressManager;
 
 /**
  * Integration tests for the IndexController.

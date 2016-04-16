@@ -36,6 +36,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
+import org.apache.cassandra.exceptions.ConfigurationException;
+import org.apache.thrift.transport.TTransportException;
 import org.cassandraunit.utils.EmbeddedCassandraServerHelper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -80,31 +82,29 @@ public class Fixtures
         cassandraKeyspace = "docussandra";
         cassandraSeeds = seedsList.split(",");
 
-        boolean embeddedCassandra;
+//        boolean embeddedCassandra;
         Cluster cluster;
         if (mockCassandra)//using cassandra-unit for testing
         {
-            long timeout = 60000;
-            EmbeddedCassandraServerHelper.startEmbeddedCassandra(timeout);
-            cluster = Cluster.builder().addContactPoints(cassandraSeeds).withPort(9142).build();
-            embeddedCassandra = true;
-            //Thread.sleep(20000);//time to let cassandra startup
+            cluster = Fixtures.ensureMockCassandraRunningAndEstablished(cassandraKeyspace);
+        } else if (seedsList.startsWith("172.17."))
+        {
+            cluster = Fixtures.ensureDockerCassandraRunningAndEstablished(cassandraKeyspace, cassandraSeeds[0]);
         } else //using a remote or local server for testing
         {
             cluster = Cluster.builder().addContactPoints(cassandraSeeds).build();
-            embeddedCassandra = false;
         }
         final Metadata metadata = cluster.getMetadata();
-
-        if (embeddedCassandra)
-        {
-            session = cluster.connect();
-            Utils.initDatabaseSingleReplication(false, session);
-            session = cluster.connect(this.getCassandraKeyspace());
-        } else
-        {
-            session = cluster.connect(this.getCassandraKeyspace());
-        }
+        session = cluster.connect(this.getCassandraKeyspace());
+//        if (embeddedCassandra)
+//        {
+//            session = cluster.connect();
+//            Utils.initDatabaseSingleReplication(false, session);
+//            session = cluster.connect(this.getCassandraKeyspace());
+//        } else
+//        {
+//            session = cluster.connect(this.getCassandraKeyspace());
+//        }
         logger.info("Connected to cluster: " + metadata.getClusterName() + '\n');
         indexRepo = new IndexRepositoryImpl(session);
         cleanUpInstance = new ITableRepositoryImpl(getSession());
@@ -173,6 +173,59 @@ public class Fixtures
     }
 
     /**
+     * Ensures that the Mock Cassandra instance is up and running. Will reinit
+     * the database every time it is called.
+     *
+     * @param cassandraKeyspace Cassandra keyspace to setup.
+     * @return A cluster object.
+     * @throws ConfigurationException
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws TTransportException
+     */
+    public static Cluster ensureMockCassandraRunningAndEstablished(String cassandraKeyspace) throws ConfigurationException, IOException, InterruptedException, TTransportException
+    {
+        Cluster cluster;
+        long timeout = 60000;
+        EmbeddedCassandraServerHelper.startEmbeddedCassandra(timeout);
+        cluster = Cluster.builder().addContactPoints("127.0.0.1").withPort(9142).build();
+        //Thread.sleep(20000);//time to let cassandra startup
+        final Metadata metadata = cluster.getMetadata();
+
+        Session session = cluster.connect();
+        Utils.initDatabase("/docussandra.cql", session);
+        session = cluster.connect(cassandraKeyspace);
+
+        logger.info("Connected to cluster: " + metadata.getClusterName() + '\n');
+        return cluster;
+    }
+
+    /**
+     * Ensures that the Docker Cassandra instance is up and running. Will reinit
+     * the database every time it is called.
+     *
+     * @param cassandraKeyspace Cassandra keyspace to setup.
+     * @return A cluster object.
+     * @throws ConfigurationException
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws TTransportException
+     */
+    public static Cluster ensureDockerCassandraRunningAndEstablished(String cassandraKeyspace, String seed) throws ConfigurationException, IOException, InterruptedException, TTransportException
+    {
+        Cluster cluster = Cluster.builder().addContactPoints(seed).withPort(9042).build();
+        //Thread.sleep(20000);//time to let cassandra startup
+        final Metadata metadata = cluster.getMetadata();
+
+        Session session = cluster.connect();
+        Utils.initDatabase("/docussandra.cql", session);
+        session = cluster.connect(cassandraKeyspace);
+
+        logger.info("Connected to cluster: " + metadata.getClusterName() + '\n');
+        return cluster;
+    }
+
+    /**
      * Load properties from a property file
      */
     private Properties loadTestProperties() throws IOException
@@ -204,9 +257,11 @@ public class Fixtures
 
     /**
      * Gets our standard bulk documents for testing.
+     *
      * @return A list of test documents.
      * @throws IOException If the file containing the documents can't be read.
-     * @throws ParseException If the file containing the document isn't valid json.
+     * @throws ParseException If the file containing the document isn't valid
+     * json.
      */
     public static List<Document> getBulkDocuments() throws IOException, ParseException
     {
@@ -215,6 +270,7 @@ public class Fixtures
 
     /**
      * Loads a JSON document array as a list of individual documents.
+     *
      * @param path File path where the json document is located.
      * @param t table that the documents should be associated with\.
      * @return A list of documents from the file.
@@ -243,8 +299,11 @@ public class Fixtures
     }
 
     /**
-     * Loads bulk documents, assuming that there is one document per line in the supplied file path.
-     * @param path path (relative to the classpath!) where the input document resides.
+     * Loads bulk documents, assuming that there is one document per line in the
+     * supplied file path.
+     *
+     * @param path path (relative to the classpath!) where the input document
+     * resides.
      * @param t What table these documents should be associated.
      * @return A list of JSON documents from the file.
      * @throws IOException If the file can't be read.
@@ -255,7 +314,7 @@ public class Fixtures
         JSONParser parser = new JSONParser();
         logger.info("Data path: " + new File(path).getAbsolutePath());
         String bulkFile = Utils.readFile(path);
-        String[] lines = bulkFile.split("\\Q\n\\E");       
+        String[] lines = bulkFile.split("\\Q\n\\E");
         List<Document> toReturn = new ArrayList<>(lines.length);
         for (int i = 0; i < lines.length; i++)
         {
