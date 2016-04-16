@@ -30,6 +30,8 @@ import com.pearson.docussandra.config.Configuration;
 import com.pearson.docussandra.exception.DuplicateItemException;
 import com.pearson.docussandra.exception.InvalidObjectIdException;
 import com.pearson.docussandra.exception.ItemNotFoundException;
+import com.pearson.docussandra.plugins.PluginHolder;
+import com.pearson.docussandra.plugins.PluginUtils;
 import com.pearson.docussandra.serialization.SerializationProvider;
 import com.strategicgains.restexpress.plugin.metrics.MetricsConfig;
 import com.strategicgains.restexpress.plugin.metrics.MetricsPlugin;
@@ -51,43 +53,71 @@ import static io.netty.handler.codec.http.HttpHeaders.Names.*;
 import static io.netty.handler.codec.http.HttpHeaders.Names.LOCATION;
 import static org.restexpress.Flags.Auth.PUBLIC_ROUTE;
 
+/**
+ * Main class for this application. Starts up the app.
+ */
 public class Main
 {
-
+    
     private static final String SERVICE_NAME = "Docussandra API";
-    private static final Logger LOG = LoggerFactory.getLogger(SERVICE_NAME);
-//    private static Authenticator piAuthenticator;
-//    private static PiAuthenticationPreprocessor preprocessor;
+    private static final Logger logger = LoggerFactory.getLogger(SERVICE_NAME);
 
+    /**
+     * Main method.
+     *
+     * @param args Command line arguments. Should be one parameter with either
+     * an environment or a path to a URL with the proper configuration via a
+     * REST GET.
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception
     {
         try
         {
             RestExpress server = initializeServer(args);
-            LOG.info("Server started up on port: " + server.getPort() + "!");
+            logger.info("Server started up on port: " + server.getPort() + "!");
             server.awaitShutdown();
             Runtime.getRuntime().addShutdownHook(new Thread(new Runnable()
             {
+                @Override
                 public void run()
                 {
-                    LOG.info("Shutting down Docussandra...");
+                    logger.info("Shutting down Docussandra...");
                     CacheFactory.shutdownCacheManger();
                 }
             }, "Shutdown-thread"));
         } catch (RuntimeException e)
         {
-            LOG.error("Runtime exception when starting/running Docussandra/RestExpress. Could not start.", e);
+            logger.error("Runtime exception when starting/running Docussandra/RestExpress. Could not start.", e);
         }
     }
 
-    public static RestExpress initializeServer(String[] args) throws IOException
+    /**
+     * Starts up the server for the specified environment.
+     *
+     * @param args Command line arguments. Should be one parameter with either
+     * an environment or a path to a URL with the proper configuration via a
+     * REST GET.
+     * @return A running RestExpress REST server.
+     * @throws IOException
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     */
+    public static RestExpress initializeServer(String[] args) throws IOException, IllegalAccessException, InstantiationException
     {
         //args = new String[]{"http://docussandra-dev-webw-1.openclass.com:8080/config/A"};
         RestExpress.setSerializationProvider(new SerializationProvider());
         //Identifiers.UUID.useShortUUID(true);
-
+        //load our plugins first
+        try
+        {
+            PluginHolder.build(PluginUtils.getPluginJars());
+        } catch (IllegalStateException e)
+        {
+            logger.warn("Warning: The plugins were already init'ed, this is fine if you are running tests, but if you see this on a running server, there is probably a problem.");
+        }
         Configuration config = loadEnvironment(args);
-        LOG.info("-----Attempting to start up Docussandra server for version: " + config.getProjectVersion() + "-----");
+        logger.info("-----Attempting to start up Docussandra server for version: " + config.getProjectVersion() + "-----");
         RestExpress server = new RestExpress()
                 .setName(config.getProjectName(SERVICE_NAME))
                 .setBaseUrl(config.getBaseUrl())
@@ -97,22 +127,18 @@ public class Main
                 .addPreprocessor(new RequestApplicationJsonPreprocessor())
                 .addPreprocessor(new RequestXAuthCheck())
                 .setMaxContentSize(6000000);
-
+        
         new VersionPlugin(config.getProjectVersion())
                 .register(server);
-
+        
         new SwaggerPlugin()
                 .register(server);
-
+        
         Routes.define(config, server);
         Relationships.define(server);
         configurePlugins(config, server);
         mapExceptions(server);
-
-//        //required pi security
-//        piAuthenticator = getKeyMapAuthenticator(config.getSecurityConfig());
-//        preprocessor = new PiAuthenticationPreprocessor(piAuthenticator);
-
+        
         if (config.getPort() == 0)
         {//no port? calculate it off of the version number
             server.setPort(calculatePort(config.getProjectVersion()));
@@ -121,7 +147,7 @@ public class Main
             server.setPort(config.getPort());
         }
         server.bind(server.getPort());
-        LOG.info("-----Docussandra server initialized for version: " + config.getProjectVersion() + "-----");
+        logger.info("-----Docussandra server initialized for version: " + config.getProjectVersion() + "-----");
         return server;
     }
 
@@ -156,7 +182,7 @@ public class Main
         {
             number += "0"; //if less than three digits long, pad with zeros
         }
-
+        
         if (snapshot)
         {
             number += "1";//snapshots have +1 to indicate that they are snapshots
@@ -169,30 +195,36 @@ public class Main
 
     }
 
+    /**
+     * Configures RestExpress plugins (not Docussandra plugins).
+     *
+     * @param config Configuration object.
+     * @param server RestExpress server object.
+     */
     private static void configurePlugins(Configuration config, RestExpress server)
     {
         configureMetrics(config, server);
-
+        
         new HyperExpressPlugin(Linkable.class)
                 .register(server);
-
+        
         new CorsHeaderPlugin("*")
                 .flag(PUBLIC_ROUTE)
                 .allowHeaders(CONTENT_TYPE, ACCEPT, LOCATION)
                 .exposeHeaders(LOCATION)
                 .register(server);
     }
-
+    
     private static void configureMetrics(Configuration config, RestExpress server)
     {
         MetricsConfig mc = config.getMetricsConfig();
-
+        
         if (mc.isEnabled())
         {
             MetricRegistry registry = new MetricRegistry();
             new MetricsPlugin(registry)
                     .register(server);
-
+            
             if (mc.isGraphiteEnabled())
             {
                 final Graphite graphite = new Graphite(new InetSocketAddress(mc.getGraphiteHost(), mc.getGraphitePort()));
@@ -205,14 +237,14 @@ public class Main
                 reporter.start(mc.getPublishSeconds(), TimeUnit.SECONDS);
             } else
             {
-                LOG.warn("*** Graphite Metrics Publishing is Disabled ***");
+                logger.warn("*** Graphite Metrics Publishing is Disabled ***");
             }
         } else
         {
-            LOG.warn("*** Metrics Generation is Disabled ***");
+            logger.warn("*** Metrics Generation is Disabled ***");
         }
     }
-
+    
     private static void mapExceptions(RestExpress server)
     {
         server
@@ -221,14 +253,14 @@ public class Main
                 .mapException(ValidationException.class, BadRequestException.class)
                 .mapException(InvalidObjectIdException.class, BadRequestException.class);
     }
-
+    
     private static Configuration loadEnvironment(String[] args)
             throws FileNotFoundException, IOException
     {
-        LOG.info("Loading environment with " + args.length + " arguments.");
+        logger.info("Loading environment with " + args.length + " arguments.");
         if (args.length > 0)
         {
-            LOG.info("-args[0]: " + args[0]);
+            logger.info("-args[0]: " + args[0]);
             if (args[0].startsWith("http") || args[0].startsWith("HTTP"))//if we are fetching props by URL
             {
                 Configuration config = new Configuration();
@@ -241,7 +273,7 @@ public class Main
         }
         return Environment.fromDefault(Configuration.class);
     }
-
+    
     private static Properties fetchPropertiesFromServer(String url)
     {
         Properties properties = new Properties();
@@ -287,7 +319,7 @@ public class Main
                         rd.close();
                     } catch (IOException e)
                     {
-                        LOG.debug("Could not close BufferedReader...", e);
+                        logger.debug("Could not close BufferedReader...", e);
                     }
                 }
                 if (isr != null)
@@ -297,7 +329,7 @@ public class Main
                         isr.close();
                     } catch (IOException e)
                     {
-                        LOG.debug("Could not close InputStreamReader...", e);
+                        logger.debug("Could not close InputStreamReader...", e);
                     }
                 }
                 request.reset();
@@ -305,5 +337,4 @@ public class Main
         }
         return properties;
     }
-
 }

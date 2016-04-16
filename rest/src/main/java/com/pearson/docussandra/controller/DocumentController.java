@@ -22,19 +22,42 @@ import com.strategicgains.hyperexpress.builder.TokenResolver;
 import com.strategicgains.hyperexpress.builder.UrlBuilder;
 import java.util.UUID;
 
+/**
+ * Controller for manipulating and reading Documents.
+ *
+ * @author https://github.com/JeffreyDeYoung
+ */
 public class DocumentController
 {
 
+    /**
+     * Location builder.
+     */
     private static final UrlBuilder LOCATION_BUILDER = new UrlBuilder();
 
-    private DocumentService documents;
+    /**
+     * DocumentService for this controller.
+     */
+    private DocumentService documentService;
 
+    /**
+     * Constructor.
+     *
+     * @param documentsService DocumentService to interact with.
+     */
     public DocumentController(DocumentService documentsService)
     {
         super();
-        this.documents = documentsService;
+        this.documentService = documentsService;
     }
 
+    /**
+     * Entry point for a Document create request.
+     *
+     * @param request
+     * @param response
+     * @return The created document.
+     */
     @ApiOperation(value = "create document",
             notes = "This method creates a document",
             response = Document.class)
@@ -52,8 +75,7 @@ public class DocumentController
 
         try
         {
-            Document saved = documents.create(database, table, data);
-
+            Document saved = documentService.create(database, table, data);
             // Construct the response for create...
             response.setResponseCreated();
 
@@ -73,6 +95,13 @@ public class DocumentController
         }
     }
 
+    /**
+     * Entry point for a Document read request.
+     *
+     * @param request
+     * @param response
+     * @return The requested document.
+     */
     @ApiOperation(value = "read document",
             notes = "This will return the details of the document provided in the route",
             response = Document.class)
@@ -82,7 +111,7 @@ public class DocumentController
         String database = request.getHeader(Constants.Url.DATABASE, "No database provided");
         String table = request.getHeader(Constants.Url.TABLE, "No table provided");
         String id = request.getHeader(Constants.Url.DOCUMENT_ID, "No document ID supplied");
-        Document document = documents.read(database, table, new Identifier(database, table, UUID.fromString(id)));
+        Document document = documentService.read(database, table, new Identifier(database, table, UUID.fromString(id)));
 
         // enrich the entity with links, etc. here...
         HyperExpress.bind(Constants.Url.DOCUMENT_ID, document.getUuid().toString());
@@ -106,7 +135,12 @@ public class DocumentController
 //
 //		return service.readAll(database, collection);
 //	}
-
+    /**
+     * Entry point for a Document update request.
+     *
+     * @param request
+     * @param response
+     */
     @ApiOperation(value = "update a document",
             notes = "This route should be used to update the details of the document",
             response = Document.class)
@@ -127,10 +161,16 @@ public class DocumentController
         document.setUuid(UUID.fromString(id));
         document.table(database, table);
         document.objectAsString(data);
-        documents.update(document);
+        documentService.update(document);
         response.setResponseNoContent();
     }
 
+    /**
+     * Entry point for a Document delete request.
+     *
+     * @param request
+     * @param response
+     */
     @ApiOperation(value = "read all the databases",
             notes = "delete the document Warning: once the document is deleted cant be restored",
             response = Database.class)
@@ -140,7 +180,9 @@ public class DocumentController
         String database = request.getHeader(Constants.Url.DATABASE, "No database provided");
         String table = request.getHeader(Constants.Url.TABLE, "No table provided");
         String id = request.getHeader(Constants.Url.DOCUMENT_ID, "No document ID supplied");
-        documents.delete(database, table, new Identifier(database, table, UUID.fromString(id)));
-        response.setResponseNoContent();
+        documentService.delete(database, table, new Identifier(database, table, UUID.fromString(id)));
+        response.setResponseNoContent();        
     }
+
+
 }

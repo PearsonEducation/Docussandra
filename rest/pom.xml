@@ -93,7 +93,12 @@
             <groupId>com.strategicgains.plugin-express</groupId>
             <artifactId>SwaggerPlugin</artifactId>
             <version>0.3.3</version>
-        </dependency>        
+        </dependency>     
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.10</version>
+        </dependency>   
     </dependencies>
 
     <build>

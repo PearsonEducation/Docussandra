@@ -7,6 +7,7 @@ import org.restexpress.pipeline.Preprocessor;
  * Preprocessor to check if the the X-Authorization header is present
  * and then validate it; not done, just a test so far.
  * */
+//Will likely be deprecated
 public class RequestXAuthCheck implements Preprocessor{
 
     @Override
