@@ -1,4 +1,4 @@
-# Docussandra: A REST-based, Document-Oriented Database with Cassandra as a Backend
+# Docussandra: A REST-based, Document-Oriented Database with Cassandra as a Backend [![Build Status](https://travis-ci.org/PearsonEducation/Docussandra.svg?branch=master)](https://travis-ci.org/PearsonEducation/Docussandra)
 ---
 
 **Docussandra** marries MongoDB's simple data storage model with the horizontal scaling of Cassandra. It enables developers to store arbitrary payloads as
