@@ -17,6 +17,8 @@ package com.pearson.docussandra.testhelper;
 
 import com.pearson.docussandra.Main;
 import java.io.IOException;
+import org.apache.cassandra.exceptions.ConfigurationException;
+import org.apache.thrift.transport.TTransportException;
 import org.restexpress.RestExpress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +26,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Class for managing testing of startup of Docussandra so we are not tearing
  * down and creating new RestExpress server instances with every test.
+ *
+ * Note, you can only create this object once; choose your init parameters
+ * carefully.
  *
  * For test use only!
  *
@@ -95,7 +100,7 @@ public class TestDocussandraManager
      *
      * @throws IOException
      */
-    public synchronized void ensureTestDocussandraRunning() throws IOException, IllegalAccessException, InstantiationException
+    public synchronized void ensureTestDocussandraRunning() throws Exception
     {
         ensureTestDocussandraRunning(true);//default to mocking cassandra
     }
@@ -111,7 +116,7 @@ public class TestDocussandraManager
      *
      * @throws IOException
      */
-    public synchronized void ensureTestDocussandraRunning(boolean mockCassandra) throws IOException, IllegalAccessException, InstantiationException
+    public synchronized void ensureTestDocussandraRunning(boolean mockCassandra) throws Exception
     {
         if (restExpressRunning == false)
         {
