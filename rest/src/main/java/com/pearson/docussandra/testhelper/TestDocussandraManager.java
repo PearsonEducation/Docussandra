@@ -75,21 +75,21 @@ public class TestDocussandraManager
         return manager;
     }
 
-    /**
-     * Ensures RestExpress is presently running. The rest endpoints will be
-     * exposed on port 19080.
-     *
-     * Cassandra will be mocked internally instead of relying on a external
-     * process; no data will be saved past the JVM shutdown.
-     *
-     * @param keyspace Keyspace to use.
-     * @throws Exception
-     */
-    public synchronized void ensureTestDocussandraRunningWithMockCassandra(String keyspace) throws Exception
-    {
-        Fixtures.ensureMockCassandraRunningAndEstablished(keyspace);
-        ensureTestDocussandraRunning(true);
-    }
+//    /**
+//     * Ensures RestExpress is presently running. The rest endpoints will be
+//     * exposed on port 19080.
+//     *
+//     * Cassandra will be mocked internally instead of relying on a external
+//     * process; no data will be saved past the JVM shutdown.
+//     *
+//     * @param keyspace Keyspace to use.
+//     * @throws Exception
+//     */
+//    public synchronized void ensureTestDocussandraRunningWithMockCassandra(String keyspace) throws Exception
+//    {
+//        Fixtures.ensureMockCassandraRunningAndEstablished(keyspace);
+//        ensureTestDocussandraRunning(true);
+//    }
 
     /**
      * Ensures RestExpress is presently running. The rest endpoints will be
@@ -123,6 +123,7 @@ public class TestDocussandraManager
             LOGGER.info("Starting RestExpress server...");
             if (mockCassandra)
             {
+                Fixtures.ensureMockCassandraRunningAndEstablished("docussandra");
                 String[] params = new String[1];
                 params[0] = "local_test";
                 server = Main.initializeServer(params, null);

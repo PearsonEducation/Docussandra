@@ -1,14 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.pearson.docussandra.testhelper;
 
 import com.jayway.restassured.RestAssured;
 import static com.jayway.restassured.RestAssured.expect;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.notNullValue;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -69,9 +63,9 @@ public class TestDocussandraManagerTest
     public void testEnsureTestDocussandraRunningWithMockCassandra() throws Exception
     {
         System.out.println("ensureTestDocussandraRunningWithMockCassandra");
-        String keyspace = "docussandra";
+        //String keyspace = "docussandra";
         TestDocussandraManager instance = TestDocussandraManager.getManager();
-        instance.ensureTestDocussandraRunningWithMockCassandra(keyspace);
+        instance.ensureTestDocussandraRunning(true);
         RestAssured.baseURI = "http://localhost";
         RestAssured.port = 19080;
         RestAssured.basePath = "/";
