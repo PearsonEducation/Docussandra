@@ -63,7 +63,7 @@ public class RestExpressManager
      *
      * @throws IOException
      */
-    public synchronized void ensureRestExpressRunning() throws IOException
+    public synchronized void ensureRestExpressRunning() throws IOException, IllegalAccessException, InstantiationException
     {
         ensureRestExpressRunning(true);//default to mocking cassandra
     }
@@ -76,7 +76,7 @@ public class RestExpressManager
      *
      * @throws IOException
      */
-    public synchronized void ensureRestExpressRunning(boolean mockCassandra) throws IOException
+    public synchronized void ensureRestExpressRunning(boolean mockCassandra) throws IOException, IllegalAccessException, InstantiationException
     {
         if (restExpressRunning == false)
         {

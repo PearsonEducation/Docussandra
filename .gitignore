@@ -18,4 +18,4 @@ rest/src/deb
 *.csv
 .~*
 *~
-rest/nbproject/
+/rest/nbproject/

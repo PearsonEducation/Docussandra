@@ -24,6 +24,11 @@
             <artifactId>docussandra-domain</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.pearson.docussandra</groupId>
+            <artifactId>docussandra-plugin</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!--dependency>
             <groupId>com.strategicgains.repoexpress</groupId>
             <artifactId>repoexpress-cassandra</artifactId>
