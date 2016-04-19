@@ -17,8 +17,6 @@ package com.pearson.docussandra.testhelper;
 
 import com.pearson.docussandra.Main;
 import java.io.IOException;
-import org.apache.cassandra.exceptions.ConfigurationException;
-import org.apache.thrift.transport.TTransportException;
 import org.restexpress.RestExpress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +26,8 @@ import org.slf4j.LoggerFactory;
  * down and creating new RestExpress server instances with every test.
  *
  * Note, you can only create this object once; choose your init parameters
- * carefully.
+ * carefully. Cannot be run after this test can not run in the same JVM as a
+ * RestExpressManager instance for this reason.
  *
  * For test use only!
  *
@@ -45,12 +44,25 @@ import org.slf4j.LoggerFactory;
 public class TestDocussandraManager
 {
 
+    
+    /**
+     * Logger for this class.
+     */
     private static final Logger LOGGER = LoggerFactory.getLogger(TestDocussandraManager.class);
 
+    /**
+     * Instance. (Singleton.)
+     */
     private static TestDocussandraManager manager = null;
 
+    /**
+     * Running flag.
+     */
     private static boolean restExpressRunning = false;
 
+    /**
+     * Rest express server for Docussandra.
+     */
     private static RestExpress server;
 
     /**
@@ -75,24 +87,9 @@ public class TestDocussandraManager
         return manager;
     }
 
-//    /**
-//     * Ensures RestExpress is presently running. The rest endpoints will be
-//     * exposed on port 19080.
-//     *
-//     * Cassandra will be mocked internally instead of relying on a external
-//     * process; no data will be saved past the JVM shutdown.
-//     *
-//     * @param keyspace Keyspace to use.
-//     * @throws Exception
-//     */
-//    public synchronized void ensureTestDocussandraRunningWithMockCassandra(String keyspace) throws Exception
-//    {
-//        Fixtures.ensureMockCassandraRunningAndEstablished(keyspace);
-//        ensureTestDocussandraRunning(true);
-//    }
 
     /**
-     * Ensures RestExpress is presently running. The rest endpoints will be
+     * Ensures Docussandra is presently running. The rest endpoints will be
      * exposed on port 19080.
      *
      * Cassandra will be mocked internally instead of relying on a external
@@ -106,7 +103,7 @@ public class TestDocussandraManager
     }
 
     /**
-     * Ensures RestExpress is presently running. The rest endpoints will be
+     * Ensures Docussandra is presently running. The rest endpoints will be
      * exposed on port 19080.
      *
      * @param mockCassandra If true, Cassandra will be mocked instead of relying
@@ -136,7 +133,7 @@ public class TestDocussandraManager
     }
 
     /**
-     * Ensures RestExpress is presently running. The rest endpoints will be
+     * Ensures Docussandra is presently running. The rest endpoints will be
      * exposed on port 19080.
      *
      * @param cassandraSeeds Cassandra seeds to use when starting up

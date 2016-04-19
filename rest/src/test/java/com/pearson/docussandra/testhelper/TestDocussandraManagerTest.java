@@ -9,11 +9,16 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 
 /**
  *
+ * Test for the DocussandraManager. This test can not run in the same JVM as a
+ * RestExpressManager instance, so it must be run ad-hoc.
+ *
  * @author Jeffrey DeYoung
  */
+@Ignore // this test can not run in the same JVM as a RestExpressManager instance, so set as ignored until we want to run it explicitly.
 public class TestDocussandraManagerTest
 {
 
