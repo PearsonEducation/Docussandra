@@ -58,7 +58,7 @@ public class Configuration
     private static final String EXECUTOR_THREAD_POOL_SIZE = "executor.threadPool.size";
 
     private int port;
-    private String baseUrl;    
+    private String baseUrl;
     private String replicationFactorString;
     private int executorThreadPoolSize;
     private MetricsConfig metricsSettings;
@@ -111,22 +111,16 @@ public class Configuration
     /**
      * Actually kicks off our object creation in order to make this object
      * usable.
+     * @param initDb If we need to create the DB or not.
      */
     public void initialize(boolean initDb)
     {
-        //Utils.initDatabase(false, replicationFactorString, dbConfig.getGenericSession());//DO NOT SET THE FLAG TO TRUE; IT WILL ERASE EVERYTHING (true is used for testing only in other places)
         CassandraConfigWithGenericSessionAccess dbConfig = new CassandraConfigWithGenericSessionAccess(properties);
-//        try
-//        {
-            if (initDb)
-            {
-                //Utils.initDatabase("/docussandra_autoload.cql", dbConfig.getGenericSession());
-                Utils.initDatabase(false, replicationFactorString, dbConfig.getGenericSession());//DO NOT SET THE FLAG TO TRUE; IT WILL ERASE EVERYTHING (true is used for testing only in other places)
-            }
-//        } catch (IOException e)
-//        {
-//            LOGGER.error("Could not init database; trying to continue startup anyway (in case DB was manually created).", e);
-//        }
+        if (initDb)
+        {
+            //Utils.initDatabase("/docussandra_autoload.cql", dbConfig.getGenericSession());
+            Utils.initDatabase(false, replicationFactorString, dbConfig.getGenericSession());//DO NOT SET THE FLAG TO TRUE; IT WILL ERASE EVERYTHING (true is used for testing only in other places)
+        }
         DatabaseRepository databaseRepository = new DatabaseRepositoryImpl(dbConfig.getSession());
         TableRepository tableRepository = new TableRepositoryImpl(dbConfig.getSession());
         DocumentRepository documentRepository = new DocumentRepositoryImpl(dbConfig.getSession());
