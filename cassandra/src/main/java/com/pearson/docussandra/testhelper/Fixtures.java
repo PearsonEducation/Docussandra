@@ -82,7 +82,6 @@ public class Fixtures
         cassandraKeyspace = "docussandra";
         cassandraSeeds = seedsList.split(",");
 
-//        boolean embeddedCassandra;
         Cluster cluster;
         if (mockCassandra)//using cassandra-unit for testing
         {
@@ -96,15 +95,6 @@ public class Fixtures
         }
         final Metadata metadata = cluster.getMetadata();
         session = cluster.connect(this.getCassandraKeyspace());
-//        if (embeddedCassandra)
-//        {
-//            session = cluster.connect();
-//            Utils.initDatabaseSingleReplication(false, session);
-//            session = cluster.connect(this.getCassandraKeyspace());
-//        } else
-//        {
-//            session = cluster.connect(this.getCassandraKeyspace());
-//        }
         logger.info("Connected to cluster: " + metadata.getClusterName() + '\n');
         indexRepo = new IndexRepositoryImpl(session);
         cleanUpInstance = new ITableRepositoryImpl(getSession());
