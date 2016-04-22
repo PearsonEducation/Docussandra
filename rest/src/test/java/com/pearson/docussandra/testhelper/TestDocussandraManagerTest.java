@@ -18,31 +18,11 @@ import org.junit.Ignore;
  *
  * @author Jeffrey DeYoung
  */
-@Ignore // this test can not run in the same JVM as a RestExpressManager instance, so set as ignored until we want to run it explicitly.
+@Ignore(value = "This test can not run in the same JVM as a RestExpressManager instance, so set as ignored until we want to run it explicitly.")
 public class TestDocussandraManagerTest
 {
 
     public TestDocussandraManagerTest()
-    {
-    }
-
-    @BeforeClass
-    public static void setUpClass()
-    {
-    }
-
-    @AfterClass
-    public static void tearDownClass()
-    {
-    }
-
-    @Before
-    public void setUp()
-    {
-    }
-
-    @After
-    public void tearDown()
     {
     }
 
