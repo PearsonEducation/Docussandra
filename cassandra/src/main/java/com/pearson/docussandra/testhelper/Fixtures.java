@@ -60,6 +60,7 @@ public class Fixtures
 
     private static Fixtures INSTANCE = null;
     public static final String DB = "mydb";
+    public static final String DB_CQL = "/docussandra.cql";
 
     private Session session;
     private final String[] cassandraSeeds;
@@ -183,7 +184,7 @@ public class Fixtures
         final Metadata metadata = cluster.getMetadata();
 
         Session session = cluster.connect();
-        Utils.initDatabase("/docussandra.cql", session);
+        Utils.initDatabase(DB_CQL, session);
         session = cluster.connect(cassandraKeyspace);
 
         logger.info("Connected to cluster: " + metadata.getClusterName() + '\n');
@@ -208,7 +209,7 @@ public class Fixtures
         final Metadata metadata = cluster.getMetadata();
 
         Session session = cluster.connect();
-        Utils.initDatabase("/docussandra.cql", session);
+        Utils.initDatabase(DB_CQL, session);
         session = cluster.connect(cassandraKeyspace);
 
         logger.info("Connected to cluster: " + metadata.getClusterName() + '\n');
@@ -522,7 +523,7 @@ public class Fixtures
     {
 //        try
 //        {
-//            Utils.initDatabase("/docussandra.cql", session);
+//            Utils.initDatabase(DB_CQL, session);
 //            CacheFactory.clearAllCaches();//if we reinit, we need to clear our caches or else we will get prepared statements that are no longer valid
 //        } catch (IOException e)
 //        {
