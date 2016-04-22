@@ -14,7 +14,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
-import testhelper.RestExpressManager;
+import com.pearson.docussandra.testhelper.RestExpressManager;
 
 /**
  * Tests for the TableController class. ROUTE :

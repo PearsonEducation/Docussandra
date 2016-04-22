@@ -2,7 +2,7 @@ package com.pearson.docussandra.controller;
 
 import com.pearson.docussandra.abstracttests.AbstractDocumentControllerTest;
 import com.pearson.docussandra.testhelper.Fixtures;
-import testhelper.RestExpressManager;
+import com.pearson.docussandra.testhelper.RestExpressManager;
 
 /**
  * Integration tests for the documents routes. ROUTE :
