@@ -20,7 +20,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
-import testhelper.RestExpressManager;
+import com.pearson.docussandra.testhelper.RestExpressManager;
 
 /**
  * Tests for the database controller tests

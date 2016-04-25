@@ -28,7 +28,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.Test;
-import testhelper.RestExpressManager;
+import com.pearson.docussandra.testhelper.RestExpressManager;
 
 /**
  * Tests for the query controller class. Located in the main test code so
