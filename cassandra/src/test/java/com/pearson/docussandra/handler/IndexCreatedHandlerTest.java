@@ -3,7 +3,7 @@ package com.pearson.docussandra.handler;
 
 import com.pearson.docussandra.Utils;
 import com.pearson.docussandra.cache.CacheFactory;
-import com.pearson.docussandra.event.IndexCreatedEvent;
+import com.pearson.docussandra.domain.event.IndexCreatedEvent;
 import com.pearson.docussandra.domain.objects.Database;
 import com.pearson.docussandra.domain.objects.Document;
 import com.pearson.docussandra.domain.objects.Index;

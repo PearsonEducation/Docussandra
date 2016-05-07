@@ -1,5 +1,5 @@
 
-package com.pearson.docussandra.event;
+package com.pearson.docussandra.domain.event;
 
 import com.pearson.docussandra.domain.objects.Identifier;
 import com.pearson.docussandra.domain.objects.Index;

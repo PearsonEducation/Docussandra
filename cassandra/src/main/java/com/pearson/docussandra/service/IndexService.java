@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.pearson.docussandra.domain.objects.Identifier;
 import com.pearson.docussandra.domain.objects.Index;
-import com.pearson.docussandra.event.IndexCreatedEvent;
+import com.pearson.docussandra.domain.event.IndexCreatedEvent;
 import com.pearson.docussandra.exception.ItemNotFoundException;
 import com.pearson.docussandra.persistence.IndexRepository;
 import com.pearson.docussandra.persistence.IndexStatusRepository;

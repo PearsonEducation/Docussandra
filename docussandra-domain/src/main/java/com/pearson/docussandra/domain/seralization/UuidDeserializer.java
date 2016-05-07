@@ -1,4 +1,4 @@
-package com.pearson.docussandra.serialization;
+package com.pearson.docussandra.domain.seralization;
 
 import java.io.IOException;
 import java.util.UUID;

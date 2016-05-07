@@ -1,4 +1,4 @@
-package com.pearson.docussandra.event;
+package com.pearson.docussandra.domain.event;
 
 import org.restexpress.plugin.statechange.domain.StateChangeEvent;
 

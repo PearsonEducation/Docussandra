@@ -13,7 +13,7 @@ import com.datastax.driver.core.Session;
 import com.pearson.docussandra.domain.objects.Identifier;
 import com.pearson.docussandra.domain.objects.Index;
 import com.pearson.docussandra.domain.objects.UUIDIdentifier;
-import com.pearson.docussandra.event.IndexCreatedEvent;
+import com.pearson.docussandra.domain.event.IndexCreatedEvent;
 import com.pearson.docussandra.exception.ItemNotFoundException;
 import com.pearson.docussandra.persistence.IndexStatusRepository;
 import com.pearson.docussandra.persistence.helper.PreparedStatementFactory;
