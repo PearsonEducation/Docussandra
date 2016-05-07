@@ -5,7 +5,7 @@ import com.datastax.driver.core.BoundStatement;
 import com.pearson.docussandra.bucketmanagement.PrimaryIndexBucketLocatorImpl;
 import com.pearson.docussandra.domain.objects.Document;
 import com.pearson.docussandra.domain.objects.Index;
-import com.pearson.docussandra.event.IndexCreatedEvent;
+import com.pearson.docussandra.domain.event.IndexCreatedEvent;
 import com.pearson.docussandra.domain.objects.QueryResponseWrapper;
 import com.pearson.docussandra.exception.IndexParseException;
 import com.pearson.docussandra.persistence.DocumentRepository;

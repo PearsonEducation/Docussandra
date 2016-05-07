@@ -17,7 +17,7 @@ import java.util.Map;
 
 import org.restexpress.RestExpress;
 
-import com.pearson.docussandra.event.IndexCreatedEvent;
+import com.pearson.docussandra.domain.event.IndexCreatedEvent;
 import com.pearson.docussandra.domain.objects.Database;
 import com.pearson.docussandra.domain.objects.Index;
 import com.pearson.docussandra.domain.objects.LinkableDocument;

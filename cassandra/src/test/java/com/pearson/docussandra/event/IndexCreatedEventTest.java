@@ -1,6 +1,7 @@
 
 package com.pearson.docussandra.event;
 
+import com.pearson.docussandra.domain.event.IndexCreatedEvent;
 import com.pearson.docussandra.domain.objects.Identifier;
 import com.pearson.docussandra.domain.objects.Index;
 import com.pearson.docussandra.testhelper.Fixtures;

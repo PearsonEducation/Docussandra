@@ -5,7 +5,7 @@ import com.pearson.docussandra.Utils;
 import com.pearson.docussandra.cache.CacheFactory;
 import com.pearson.docussandra.domain.objects.Database;
 import com.pearson.docussandra.domain.objects.Index;
-import com.pearson.docussandra.event.IndexCreatedEvent;
+import com.pearson.docussandra.domain.event.IndexCreatedEvent;
 import com.pearson.docussandra.persistence.IndexStatusRepository;
 import com.pearson.docussandra.testhelper.Fixtures;
 import java.io.IOException;

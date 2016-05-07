@@ -1,5 +1,7 @@
 package com.pearson.docussandra.serialization;
 
+import com.pearson.docussandra.domain.seralization.UuidDeserializer;
+import com.pearson.docussandra.domain.seralization.UuidSerializer;
 import java.util.UUID;
 
 import org.restexpress.serialization.json.JacksonJsonProcessor;

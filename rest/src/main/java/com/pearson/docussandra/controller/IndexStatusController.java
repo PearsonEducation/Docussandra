@@ -9,7 +9,7 @@ import org.restexpress.Request;
 import org.restexpress.Response;
 
 import com.pearson.docussandra.Constants;
-import com.pearson.docussandra.event.IndexCreatedEvent;
+import com.pearson.docussandra.domain.event.IndexCreatedEvent;
 import com.pearson.docussandra.service.IndexService;
 import com.strategicgains.hyperexpress.HyperExpress;
 import com.strategicgains.hyperexpress.builder.TokenBinder;
