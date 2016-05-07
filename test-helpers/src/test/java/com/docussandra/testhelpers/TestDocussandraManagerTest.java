@@ -1,4 +1,4 @@
-package com.pearson.docussandra.testhelper;
+package com.docussandra.testhelpers;
 
 import com.jayway.restassured.RestAssured;
 import static com.jayway.restassured.RestAssured.expect;

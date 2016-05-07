@@ -42,6 +42,7 @@
         <module>rest</module>
         <module>integration_test</module>
         <module>plugin</module>
+        <module>test-helpers</module>
     </modules>
 
     <dependencies>

@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pearson.docussandra.testhelper;
+package com.docussandra.testhelpers;
 
 import com.pearson.docussandra.Main;
+import com.pearson.docussandra.testhelper.Fixtures;
 import java.io.IOException;
 import org.restexpress.RestExpress;
 import org.slf4j.Logger;
