@@ -1,11 +1,10 @@
-package com.pearson.docussandra.testhelper;
+package com.docussandra.testhelpers;
 
 import com.jayway.restassured.RestAssured;
 import static com.jayway.restassured.RestAssured.expect;
 import static org.hamcrest.Matchers.equalTo;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
 
 /**
  *
@@ -14,7 +13,6 @@ import org.junit.Ignore;
  *
  * @author Jeffrey DeYoung
  */
-@Ignore(value = "This test can not run in the same JVM as a RestExpressManager instance, so set as ignored until we want to run it explicitly.")
 public class TestDocussandraManagerTest
 {
 

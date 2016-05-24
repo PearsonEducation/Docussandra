@@ -3,7 +3,7 @@ package com.pearson.docussandra.persistence;
 
 import com.datastax.driver.core.Session;
 import com.pearson.docussandra.domain.objects.Identifier;
-import com.pearson.docussandra.event.IndexCreatedEvent;
+import com.pearson.docussandra.domain.event.IndexCreatedEvent;
 import java.util.List;
 import java.util.UUID;
 

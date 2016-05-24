@@ -10,7 +10,7 @@ import com.pearson.docussandra.domain.objects.Document;
 import com.pearson.docussandra.domain.objects.FieldDataType;
 import com.pearson.docussandra.domain.objects.Index;
 import com.pearson.docussandra.domain.objects.IndexField;
-import com.pearson.docussandra.event.IndexCreatedEvent;
+import com.pearson.docussandra.domain.event.IndexCreatedEvent;
 import com.pearson.docussandra.domain.ParsedQuery;
 import com.pearson.docussandra.domain.objects.Query;
 import com.pearson.docussandra.domain.objects.Table;
