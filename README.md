@@ -103,7 +103,7 @@ To implement and use your own plugins in Docussandra, you must:
        <dependency>
             <groupId>com.pearson.docussandra</groupId>
             <artifactId>docussandra-plugin</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>1.0.1-SNAPSHOT</version>
         </dependency>
 ```
 3. Implement one or both of the provided interfaces (technically abstract classes): ```NotifierPlugin``` or ```SecurityPlugin```.
