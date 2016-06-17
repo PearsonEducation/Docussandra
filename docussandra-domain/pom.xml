@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.pearson.docussandra</groupId>
         <artifactId>docussandra-parent</artifactId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.0.1</version>
     </parent>
     <artifactId>docussandra-domain</artifactId>
     <packaging>jar</packaging>
