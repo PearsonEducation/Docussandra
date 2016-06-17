@@ -87,14 +87,14 @@ public class Query
      */
     public String getDatabase()
     {
-        return (this.database().name());
+        return (this.getDatabaseAsObject().name());
     }
 
     /**
      * get database details as an object
      *
      */
-    public Database database()
+    public Database getDatabaseAsObject()
     {
         return database.asObject();
     }

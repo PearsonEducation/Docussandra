@@ -133,7 +133,7 @@ public class QueryController
 
         } catch (IndexParseException | FieldNotIndexedException e)
         {
-            if (!service.checkDatabase(toQuery.database().getId()))
+            if (!service.checkDatabase(toQuery.getDatabaseAsObject().getId()))
             {
                 throw new ItemNotFoundException("Database not found: " + toQuery.getDatabase());
             }
