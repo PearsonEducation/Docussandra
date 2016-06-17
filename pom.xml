@@ -6,7 +6,7 @@
     <url>https://github.com/tfredrich/docussandra</url>
     <groupId>com.pearson.docussandra</groupId>
     <artifactId>docussandra-parent</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     
     <distributionManagement>
@@ -277,7 +277,7 @@
         <url>git@bitbucket.pearson.com/doc/docussandra.git</url>
         <connection>scm:git:ssh://git@bitbucket.pearson.com/doc/docussandra.git</connection>
         <developerConnection>scm:git:ssh://git@bitbucket.pearson.com/doc/docussandra.git</developerConnection>
-        <tag>v1.0.1</tag>
+        <tag>v1.0</tag>
     </scm>
 
 
