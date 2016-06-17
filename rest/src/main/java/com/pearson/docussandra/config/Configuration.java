@@ -57,6 +57,22 @@ public class Configuration
     private static final String BASE_URL_PROPERTY = "base.url";
     private static final String EXECUTOR_THREAD_POOL_SIZE = "executor.threadPool.size";
 
+    /**
+     * @return the documentService
+     */
+    public static DocumentService getDocumentService()
+    {
+        return documentService;
+    }
+
+    /**
+     * @return the queryService
+     */
+    public static QueryService getQueryService()
+    {
+        return queryService;
+    }
+
     private int port;
     private String baseUrl;
     private String replicationFactorString;
@@ -72,6 +88,9 @@ public class Configuration
     private QueryController queryController;
     private HealthCheckController healthController;
     private BuildInfoController buildInfoController;
+
+    private static DocumentService documentService;
+    private static QueryService queryService;
 
     /**
      * Properties for this application.
@@ -111,6 +130,7 @@ public class Configuration
     /**
      * Actually kicks off our object creation in order to make this object
      * usable.
+     *
      * @param initDb If we need to create the DB or not.
      */
     public void initialize(boolean initDb)
@@ -130,16 +150,18 @@ public class Configuration
 
         DatabaseService databaseService = new DatabaseService(databaseRepository);
         TableService tableService = new TableService(databaseRepository, tableRepository);
-        DocumentService documentService = new DocumentService(tableRepository, documentRepository, PluginHolder.getInstance().getNotifierPlugins());
+
+        documentService = new DocumentService(tableRepository, documentRepository, PluginHolder.getInstance().getNotifierPlugins());
         IndexService indexService = new IndexService(tableRepository, indexRepository, indexStatusRepository);
-        QueryService queryService = new QueryService(databaseRepository, tableRepository, queryRepository);
+
+        queryService = new QueryService(databaseRepository, tableRepository, queryRepository);
 
         databaseController = new DatabaseController(databaseService);
         tableController = new TableController(tableService);
-        documentController = new DocumentController(documentService);
+        documentController = new DocumentController(getDocumentService());
         indexController = new IndexController(indexService);
         indexStatusController = new IndexStatusController(indexService);
-        queryController = new QueryController(queryService);
+        queryController = new QueryController(getQueryService());
         healthController = new HealthCheckController();
         buildInfoController = new BuildInfoController();
         // TODO: create service and repository implementations for these...
