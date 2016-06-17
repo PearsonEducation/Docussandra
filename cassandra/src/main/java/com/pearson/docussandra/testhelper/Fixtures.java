@@ -280,10 +280,10 @@ public class Fixtures
         for (int i = 0; i < docs.size(); i++)
         {
             Document doc = new Document();
-            doc.table(t);
+            doc.setTable(t);
             doc.setUuid(new UUID(Long.MAX_VALUE - i, 1));//give it a UUID that we will recognize
             JSONObject object = (JSONObject) docs.get(i);
-            doc.objectAsString(object.toJSONString());
+            doc.setObjectAsString(object.toJSONString());
             toReturn.add(doc);
         }
         return toReturn;
@@ -310,10 +310,10 @@ public class Fixtures
         for (int i = 0; i < lines.length; i++)
         {
             Document doc = new Document();
-            doc.table(t);
+            doc.setTable(t);
             doc.setUuid(new UUID(Long.MAX_VALUE - i, 1));//give it a UUID that we will recognize
             JSONObject object = (JSONObject) parser.parse(lines[i]);
-            doc.objectAsString(object.toJSONString());
+            doc.setObjectAsString(object.toJSONString());
             toReturn.add(doc);
         }
         return toReturn;
@@ -722,8 +722,8 @@ public class Fixtures
     public static final Document createTestDocument()
     {
         Document entity = new Document();
-        entity.table("mydb", "mytable");
-        entity.objectAsString("{\"greeting\":\"hello\", \"myindexedfield\": \"thisismyfield\", \"myindexedfield1\":\"my second field\", \"myindexedfield2\":\"my third field\"}");
+        entity.setTable("mydb", "mytable");
+        entity.setObjectAsString("{\"greeting\":\"hello\", \"myindexedfield\": \"thisismyfield\", \"myindexedfield1\":\"my second field\", \"myindexedfield2\":\"my third field\"}");
         entity.setUuid(new UUID(0L, 1L));
         entity.setCreatedAt(new Date());
         entity.setUpdatedAt(new Date());
@@ -738,8 +738,8 @@ public class Fixtures
     public static final Document createTestDocument2()
     {
         Document entity = new Document();
-        entity.table("mydb", "mytable");
-        entity.objectAsString("{\"greeting\":\"hello\", \"myindexedfield\": \"this is my field\", \"myindexedfield1\":\"my second field\", \"myindexedfield2\":\"my third field\"}");
+        entity.setTable("mydb", "mytable");
+        entity.setObjectAsString("{\"greeting\":\"hello\", \"myindexedfield\": \"this is my field\", \"myindexedfield1\":\"my second field\", \"myindexedfield2\":\"my third field\"}");
         entity.setUuid(new UUID(0L, 2L));
         entity.setCreatedAt(new Date());
         entity.setUpdatedAt(new Date());
@@ -754,8 +754,8 @@ public class Fixtures
     public static final Document createTestDocument3()
     {
         Document entity = new Document();
-        entity.table("mydb", "mytable");
-        entity.objectAsString("{\"thisisastring\":\"hello\", \"thisisanint\": \"5\", \"thisisadouble\":\"5.555\","
+        entity.setTable("mydb", "mytable");
+        entity.setObjectAsString("{\"thisisastring\":\"hello\", \"thisisanint\": \"5\", \"thisisadouble\":\"5.555\","
                 + " \"thisisbase64\":\"VGhpcyBpcyBhIGdvb2RseSB0ZXN0IG1lc3NhZ2Uu\", \"thisisaboolean\":\"f\","
                 + " \"thisisadate\":\"Thu Apr 30 09:52:04 MDT 2015\", \"thisisauudid\":\"3d069a5a-ef51-11e4-90ec-1681e6b88ec1\", \"thisisalong\":\"378657657654654\"}");
         entity.setUuid(new UUID(0L, 3L));
@@ -896,9 +896,9 @@ public class Fixtures
     public static final Table createTestTable()
     {
         Table t = new Table();
-        t.name("mytable");
-        t.database(Fixtures.DB);
-        t.description("My Table stores a lot of data.");
+        t.setName("mytable");
+        t.setDatabase(Fixtures.DB);
+        t.setDescription("My Table stores a lot of data.");
         return t;
     }
 
@@ -910,16 +910,16 @@ public class Fixtures
     public static final Table createTestWorldBankTable()
     {
         Table testTable = new Table();
-        testTable.name("worldbankloans");
-        testTable.database(createTestWorldBankDatabase().name());
-        testTable.description("This table stores data about World Bank loans.");
+        testTable.setName("worldbankloans");
+        testTable.setDatabase(createTestWorldBankDatabase().getName());
+        testTable.setDescription("This table stores data about World Bank loans.");
         return testTable;
     }
 
     public static Database createTestWorldBankDatabase()
     {
         Database testDb = new Database("worldbank");
-        testDb.description("A database about the World Bank.");
+        testDb.setDescription("A database about the World Bank.");
         return testDb;
     }
 
@@ -931,7 +931,7 @@ public class Fixtures
     public static Database createTestDatabase()
     {
         Database database = new Database(DB);
-        database.description("This is a test database.");
+        database.setDescription("This is a test database.");
         return database;
     }
 

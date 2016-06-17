@@ -170,17 +170,17 @@ public class DatabaseRepositoryImpl extends AbstractCRUDRepository<Database> imp
 
     private void bindCreate(BoundStatement bs, Database entity)
     {
-        bs.bind(entity.name(),
-                entity.description(),
+        bs.bind(entity.getName(),
+                entity.getDescription(),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt());
     }
 
     private void bindUpdate(BoundStatement bs, Database entity)
     {
-        bs.bind(entity.description(),
+        bs.bind(entity.getDescription(),
                 entity.getUpdatedAt(),
-                entity.name());
+                entity.getName());
     }
 
     private List<Database> marshalAll(ResultSet rs)
@@ -204,8 +204,8 @@ public class DatabaseRepositoryImpl extends AbstractCRUDRepository<Database> imp
         }
 
         Database n = new Database();
-        n.name(row.getString(Columns.NAME));
-        n.description(row.getString(Columns.DESCRIPTION));
+        n.setName(row.getString(Columns.NAME));
+        n.setDescription(row.getString(Columns.DESCRIPTION));
         n.setCreatedAt(row.getDate(Columns.CREATED_AT));
         n.setUpdatedAt(row.getDate(Columns.UPDATED_AT));
         return n;

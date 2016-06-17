@@ -32,7 +32,7 @@ public class TableReference
 
     public TableReference(Table table)
     {
-        this(table.databaseName(), table.name());
+        this(table.getDatabaseName(), table.getName());
     }
 
     public String database()
@@ -48,8 +48,8 @@ public class TableReference
     public Table asObject()
     {
         Table t = new Table();
-        t.database(database);
-        t.name(name);
+        t.setDatabase(database);
+        t.setName(name);
         return t;
     }
 

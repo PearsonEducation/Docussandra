@@ -25,7 +25,7 @@ public class Table
     @Required("Database")
     @ChildValidation
     private DatabaseReference database;
-    
+
     @ApiModelProperty(value = "The table's name",
             notes = "This is the tables name",
             dataType = "String",
@@ -42,77 +42,141 @@ public class Table
     // After delete or update, how long should the old versions live?
     private long deleteTtl = 0;
 
+    /**
+     * Default constructor, needed for serialization.
+     */
     public Table()
     {
         super();
     }
 
+    /**
+     * Returns true if this Table object has a database object associated with
+     * it.
+     *
+     * @return
+     */
     public boolean hasDatabase()
     {
         return (database != null);
     }
 
-    public Database database()
+    /**
+     * Gets the database object associated with this Table object.
+     *
+     * @return
+     */
+    public Database getDatabase()
     {
         return database.asObject();
     }
 
-    public void database(Database database)
+    /**
+     * Sets the database for this table.
+     *
+     * @param database
+     */
+    public void setDatabase(Database database)
     {
         this.database = new DatabaseReference(database);
     }
 
-    public void database(String name)
+    /**
+     * Sets the database for this table.
+     *
+     * @param name
+     */
+    public void setDatabase(String name)
     {
         this.database = new DatabaseReference(name);
     }
 
-    public String databaseName()
+    /**
+     * Gets the database name associated with this table.
+     *
+     * @return
+     */
+    public String getDatabaseName()
     {
-        return (hasDatabase() ? database.name() : null);
+        return (hasDatabase() ? database.getName() : null);
     }
 
-    public boolean hasName()
-    {
-        return (name != null);
-    }
-
-    public String name()
+    /**
+     * Gets the name for this table.
+     *
+     * @return
+     */
+    public String getName()
     {
         return name;
     }
 
-    public void name(String name)
+    /**
+     * Sets the name of this table.
+     *
+     * @param name
+     */
+    public void setName(String name)
     {
         this.name = name;
     }
 
+    /**
+     * Returns true if there is a description for this table.
+     *
+     * @return
+     */
     public boolean hasDescription()
     {
         return (description != null);
     }
 
-    public String description()
+    /**
+     * Gets the description for this table.
+     *
+     * @return
+     */
+    public String getDescription()
     {
         return description;
     }
 
-    public void description(String description)
+    /**
+     * Sets the description for this table.
+     *
+     * @param description
+     */
+    public void setDescription(String description)
     {
         this.description = description;
     }
 
+    /**
+     * Gets the identifier object for this table.
+     *
+     * @return
+     */
     @Override
     public Identifier getId()
     {
-        return (hasDatabase() & hasName() ? new Identifier(database.name(), name) : null);
+        return (hasDatabase() & name != null ? new Identifier(database.getName(), name) : null);
     }
 
+    /**
+     * Gets the name of this table as it is referred to by Cassandra itself.
+     *
+     * @return
+     */
     public String toDbTable()
     {
-        return database.name() + "_" + name;
+        return database.getName() + "_" + name;
     }
 
+    /**
+     * Returns a string representation of this object.
+     *
+     * @return
+     */
     @Override
     public String toString()
     {
@@ -127,6 +191,11 @@ public class Table
         return sb.toString();
     }
 
+    /**
+     * Hash code.
+     *
+     * @return
+     */
     @Override
     public int hashCode()
     {
@@ -139,6 +208,12 @@ public class Table
         return hash;
     }
 
+    /**
+     * Determines if this object is equal to another object.
+     *
+     * @param obj
+     * @return
+     */
     @Override
     public boolean equals(Object obj)
     {

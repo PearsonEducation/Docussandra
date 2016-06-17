@@ -159,8 +159,8 @@ public class DocumentController
 
         Document document = new Document();
         document.setUuid(UUID.fromString(id));
-        document.table(database, table);
-        document.objectAsString(data);
+        document.setTable(database, table);
+        document.setObjectAsString(data);
         documentService.update(document);
         response.setResponseNoContent();
     }

@@ -25,9 +25,9 @@ public class TableService
 
     public Table create(Table entity)
     {
-        if (!databases.exists(entity.database().getId()))
+        if (!databases.exists(entity.getDatabase().getId()))
         {
-            throw new ItemNotFoundException("Database not found: " + entity.database());
+            throw new ItemNotFoundException("Database not found: " + entity.getDatabase());
         }
         //check if the table exits
         if (tables.exists(entity.getId()))

@@ -64,14 +64,14 @@ public class DatabaseController
             database = new Database();
         }
 
-        database.name(name);
+        database.setName(name);
         Database saved = databases.create(database);
 
         // Construct the response for create...
         response.setResponseCreated();
 
         // enrich the resource with links, etc. here...
-        TokenResolver resolver = HyperExpress.bind(Constants.Url.DATABASE, saved.name());
+        TokenResolver resolver = HyperExpress.bind(Constants.Url.DATABASE, saved.getName());
 
         // Include the Location header...
         String locationPattern = request.getNamedUrl(HttpMethod.GET, Constants.Routes.DATABASE);
@@ -91,7 +91,7 @@ public class DatabaseController
         Database database = databases.read(name);
 
         // enrich the entity with links, etc. here...
-        HyperExpress.bind(Constants.Url.DATABASE, database.name());
+        HyperExpress.bind(Constants.Url.DATABASE, database.getName());
 
         return database;
     }
@@ -107,7 +107,7 @@ public class DatabaseController
             @Override
             public void bind(Database object, TokenResolver resolver)
             {
-                resolver.bind(Constants.Url.DATABASE, object.name());
+                resolver.bind(Constants.Url.DATABASE, object.getName());
             }
         });
         return databases.readAll();
@@ -122,7 +122,7 @@ public class DatabaseController
         String name = request.getHeader(Constants.Url.DATABASE, "No database name provided");
         Database database = request.getBodyAs(Database.class, "Database details not provided");
 
-        database.name(name);
+        database.setName(name);
         databases.update(database);
         response.setResponseNoContent();
     }

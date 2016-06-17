@@ -83,9 +83,9 @@ public class DocumentRepositoryImplTest
         DocumentRepository instance = new DocumentRepositoryImpl(f.getSession());
         Document result = instance.create(entity);
         assertNotNull(result);
-        assertEquals(entity.databaseName(), result.databaseName());
-        assertEquals(entity.tableName(), result.tableName());
-        assertEquals(entity.object(), result.object());
+        assertEquals(entity.getDatabaseName(), result.getDatabaseName());
+        assertEquals(entity.getTableName(), result.getTableName());
+        assertEquals(entity.getObject(), result.getObject());
         assertNotNull(result.getUuid());
         //cleanup the random uuid'ed doc
         f.deleteDocument(result);
@@ -123,17 +123,17 @@ public class DocumentRepositoryImplTest
 
         DocumentRepository instance = new DocumentRepositoryImpl(f.getSession());
 
-        List<Document> result = instance.readAll(testDb.name(), testTable.name(), 10, 0);
+        List<Document> result = instance.readAll(testDb.getName(), testTable.getName(), 10, 0);
         assertTrue(result.size() == 10);
         assertNotNull(result.get(0).getId());
         assertNotNull(result.get(0).getUuid());
         assertNotNull(result.get(0).getUpdatedAt());
-        result = instance.readAll(testDb.name(), testTable.name(), 10, 10);
+        result = instance.readAll(testDb.getName(), testTable.getName(), 10, 10);
         assertTrue(result.size() == 10);
         assertNotNull(result.get(0).getId());
         assertNotNull(result.get(0).getUuid());
         assertNotNull(result.get(0).getUpdatedAt());
-        result = instance.readAll(testDb.name(), testTable.name(), 100, 20);
+        result = instance.readAll(testDb.getName(), testTable.getName(), 100, 20);
         assertTrue(result.size() == 14);
     }
 
@@ -150,28 +150,28 @@ public class DocumentRepositoryImplTest
         DocumentRepository instance = new DocumentRepositoryImpl(f.getSession());
 
         //let's get the first 5
-        QueryResponseWrapper result = instance.readAll(testDb.name(), testTable.name(), 5, 0);
+        QueryResponseWrapper result = instance.readAll(testDb.getName(), testTable.getName(), 5, 0);
         assertNotNull(result);
         assertTrue(!result.isEmpty());
         assertTrue(result.size() == 5);
         assertTrue(result.getNumAdditionalResults() == null);
 
         //now lets get the second 5
-        result = instance.readAll(testDb.name(), testTable.name(), 5, 5);
+        result = instance.readAll(testDb.getName(), testTable.getName(), 5, 5);
         assertNotNull(result);
         assertTrue(!result.isEmpty());
         assertTrue(result.size() == 5);
         assertTrue(result.getNumAdditionalResults() == null);
 
         //now lets get the third 5
-        result = instance.readAll(testDb.name(), testTable.name(), 5, 10);
+        result = instance.readAll(testDb.getName(), testTable.getName(), 5, 10);
         assertNotNull(result);
         assertTrue(!result.isEmpty());
         assertTrue(result.size() == 5);
         assertTrue(result.getNumAdditionalResults() == null);
 
         //now lets get the last 4
-        result = instance.readAll(testDb.name(), testTable.name(), 5, 30);
+        result = instance.readAll(testDb.getName(), testTable.getName(), 5, 30);
         assertNotNull(result);
         assertTrue(!result.isEmpty());
         assertTrue(result.size() == 4);
@@ -189,7 +189,7 @@ public class DocumentRepositoryImplTest
         f.insertDocument(testDocument);
         DocumentRepository instance = new DocumentRepositoryImpl(f.getSession());
         String newObject = "{\"newjson\": \"object\"}";
-        testDocument.objectAsString(newObject);
+        testDocument.setObjectAsString(newObject);
         Document result = instance.update(testDocument);
         assertEquals(testDocument, result);
         //cleanup the random uuid'ed doc
@@ -238,7 +238,7 @@ public class DocumentRepositoryImplTest
 
         //update
         String newObject = "{\"newjson\": \"object\"}";
-        testDocument.objectAsString(newObject);
+        testDocument.setObjectAsString(newObject);
         Document updateResult = instance.update(testDocument);
         assertEquals(testDocument, updateResult);
 
@@ -269,7 +269,7 @@ public class DocumentRepositoryImplTest
 
         //update again
         newObject = "{\"newjson\": \"objectNew\"}";
-        testDocument.objectAsString(newObject);
+        testDocument.setObjectAsString(newObject);
         updateResult = instance.update(testDocument);
         assertEquals(testDocument, updateResult);
 

@@ -87,7 +87,7 @@ public abstract class AbstractQueryControllerTest
         twoPrime.setUuid(new UUID(twoPrime.getUuid().getMostSignificantBits() + 3, 2L));
         f.insertDocument(twoPrime);
         f.insertDocuments(Fixtures.getBulkDocuments());
-        RestAssured.basePath = "/databases/" + testDb.name() + "/tables/" + testTable.name() + "/queries";
+        RestAssured.basePath = "/databases/" + testDb.getName() + "/tables/" + testTable.getName() + "/queries";
     }
 
     /**
@@ -302,7 +302,7 @@ public abstract class AbstractQueryControllerTest
         try
         {
             //data setup
-            RestAssured.basePath = "/databases/" + testTable.databaseName() + "/tables/" + testTable.name() + "/queries";
+            RestAssured.basePath = "/databases/" + testTable.getDatabaseName() + "/tables/" + testTable.getName() + "/queries";
             f.insertDatabase(testDb);
             f.insertTable(testTable);
             //throw a few indexes in (including the one we are testing)
@@ -373,7 +373,7 @@ public abstract class AbstractQueryControllerTest
         try
         {
             //data setup
-            RestAssured.basePath = "/databases/" + testTable.databaseName() + "/tables/" + testTable.name() + "/queries";
+            RestAssured.basePath = "/databases/" + testTable.getDatabaseName() + "/tables/" + testTable.getName() + "/queries";
             f.insertDatabase(testDb);
             f.insertTable(testTable);
             //throw a few indexes in (including the one we are testing)
@@ -429,7 +429,7 @@ public abstract class AbstractQueryControllerTest
         try
         {
             //data setup
-            RestAssured.basePath = "/databases/" + testTable.databaseName() + "/tables/" + testTable.name() + "/queries";
+            RestAssured.basePath = "/databases/" + testTable.getDatabaseName() + "/tables/" + testTable.getName() + "/queries";
             f.insertDatabase(testDb);
             f.insertTable(testTable);
             //throw a few indexes in (including the one we are testing)
@@ -499,7 +499,7 @@ public abstract class AbstractQueryControllerTest
         try
         {
             //data setup
-            RestAssured.basePath = "/databases/" + testTable.databaseName() + "/tables/" + testTable.name() + "/queries";
+            RestAssured.basePath = "/databases/" + testTable.getDatabaseName() + "/tables/" + testTable.getName() + "/queries";
             f.insertDatabase(testDb);
             f.insertTable(testTable);
             //throw a few indexes in (including the one we are testing)

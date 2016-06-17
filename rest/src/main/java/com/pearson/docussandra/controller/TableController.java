@@ -46,8 +46,8 @@ public class TableController
             table = new Table();
         }
 
-        table.database(databaseName);
-        table.name(tableName);
+        table.setDatabase(databaseName);
+        table.setName(tableName);
         Table saved = service.create(table);
 
         // Construct the response for create...
@@ -109,8 +109,8 @@ public class TableController
         String databaseName = request.getHeader(Constants.Url.DATABASE, "No database provided");
         String tableName = request.getHeader(Constants.Url.TABLE, "No table provided");
         Table table = request.getBodyAs(Table.class, "Table details not provided");
-        table.database(databaseName);
-        table.name(tableName);
+        table.setDatabase(databaseName);
+        table.setName(tableName);
         service.update(table);
         response.setResponseNoContent();
     }

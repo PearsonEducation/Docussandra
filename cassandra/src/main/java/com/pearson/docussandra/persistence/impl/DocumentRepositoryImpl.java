@@ -77,7 +77,7 @@ public class DocumentRepositoryImpl extends AbstractCRUDRepository<Document> imp
                     + " ID already exists: " + entity.getId().toString());
         }
 
-        Table table = entity.table();
+        Table table = entity.getTable();
         PreparedStatement createStmt = PreparedStatementFactory.getPreparedStatement(String.format(CREATE_CQL, table.toDbTable(), Columns.ID), getSession());
         try
         {
@@ -113,7 +113,7 @@ public class DocumentRepositoryImpl extends AbstractCRUDRepository<Document> imp
             throw new ItemNotFoundException("ID not found: " + identifier.toString());
         }
         //item.setId(identifier);
-        item.table(table);
+        item.setTable(table);
         return item;
     }
 
@@ -121,8 +121,8 @@ public class DocumentRepositoryImpl extends AbstractCRUDRepository<Document> imp
     public QueryResponseWrapper readAll(String database, String tableString, int limit, long offset)
     {
         Table table = new Table();
-        table.database(database);
-        table.name(tableString);
+        table.setDatabase(database);
+        table.setName(tableString);
         long maxIndex = offset + limit;
         PreparedStatement readStmt = PreparedStatementFactory.getPreparedStatement(String.format(READ_ALL_CQL, table.toDbTable(), maxIndex + 1), getSession());//we do one plus here so we know if there are additional results
         BoundStatement bs = new BoundStatement(readStmt);
@@ -137,7 +137,7 @@ public class DocumentRepositoryImpl extends AbstractCRUDRepository<Document> imp
     {
         Document old = read(entity.getId()); //will throw exception of doc is not found
         entity.setCreatedAt(old.getCreatedAt());//copy over the original create date
-        Table table = entity.table();
+        Table table = entity.getTable();
         PreparedStatement updateStmt = PreparedStatementFactory.getPreparedStatement(String.format(CREATE_CQL, table.toDbTable(), Columns.ID), getSession());
 
         BoundStatement bs = new BoundStatement(updateStmt);
@@ -164,7 +164,7 @@ public class DocumentRepositoryImpl extends AbstractCRUDRepository<Document> imp
     {
         try
         {
-            Table table = entity.table();
+            Table table = entity.getTable();
             PreparedStatement deleteStmt = PreparedStatementFactory.getPreparedStatement(String.format(DELETE_CQL, table.toDbTable(), Columns.ID), getSession());
 
             BoundStatement bs = new BoundStatement(deleteStmt);
@@ -198,7 +198,7 @@ public class DocumentRepositoryImpl extends AbstractCRUDRepository<Document> imp
         Document entity = this.read(id);
         try
         {
-            Table table = entity.table();
+            Table table = entity.getTable();
             PreparedStatement deleteStmt = PreparedStatementFactory.getPreparedStatement(String.format(DELETE_CQL, table.toDbTable(), Columns.ID), getSession());
 
             BoundStatement bs = new BoundStatement(deleteStmt);
@@ -249,7 +249,7 @@ public class DocumentRepositoryImpl extends AbstractCRUDRepository<Document> imp
     private void bindCreate(BoundStatement bs, Document entity)
     {
         bs.bind(entity.getUuid(),
-                ByteBuffer.wrap(BSON.encode(entity.object())),
+                ByteBuffer.wrap(BSON.encode(entity.getObject())),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt());
     }

@@ -11,6 +11,12 @@ import java.util.Objects;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.restexpress.plugin.hyperexpress.Linkable;
 
+/**
+ * Database domain object. Represents a database in Docussandra, but does not
+ * contain the actual data inside of the database.
+ *
+ * @author Jeffrey DeYoung
+ */
 @ApiModel(value = "Database",
         description = "Model that defines a database including its name and description")
 public class Database
@@ -40,50 +46,89 @@ public class Database
         super();
     }
 
+    /**
+     * Constructor.
+     *
+     * @param name Name of the database.
+     */
     public Database(String name)
     {
         this();
-        name(name);
+        setName(name);
     }
 
-    public String name()
+    /**
+     * Gets the name of this database.
+     *
+     * @return
+     */
+    public String getName()
     {
         return name;
     }
 
-    public void name(String name)
+    /**
+     * Sets the name of this database.
+     *
+     * @param name
+     */
+    public void setName(String name)
     {
         this.name = name;
     }
 
+    /**
+     * Gets the Identifier of this DB.
+     *
+     * @return
+     */
     @Override
     public Identifier getId()
     {
         return new Identifier(name);
     }
 
+    /**
+     * Returns true if there is a description for this DB.
+     *
+     * @return
+     */
     public boolean hasDescription()
     {
         return (description != null);
     }
 
-    public String description()
+    /**
+     * Gets the description for this Database.
+     *
+     * @return
+     */
+    public String getDescription()
     {
         return description;
     }
 
-    public void description(String description)
+    /**
+     * Sets the description for this database.
+     *
+     * @param description
+     */
+    public void setDescription(String description)
     {
         this.description = description;
     }
 
+    /**
+     * Gets a string representation of this object.
+     *
+     * @return
+     */
     @Override
     public String toString()
     {
         StringBuilder sb = new StringBuilder(name);
 
-        if (hasDescription())
-        {
+        if (hasDescription()) {
             sb.append(" (");
             sb.append(description);
             sb.append(")");
@@ -91,6 +136,11 @@ public class Database
         return sb.toString();
     }
 
+    /**
+     * Gets the hash code for this object.
+     *
+     * @return
+     */
     @Override
     public int hashCode()
     {
@@ -100,24 +150,26 @@ public class Database
         return hash;
     }
 
+    /**
+     * Determines if this object is equal to another object.
+     *
+     * @param obj
+     * @return
+     */
     @Override
     public boolean equals(Object obj)
     {
-        if (obj == null)
-        {
+        if (obj == null) {
             return false;
         }
-        if (getClass() != obj.getClass())
-        {
+        if (getClass() != obj.getClass()) {
             return false;
         }
         final Database other = (Database) obj;
-        if (!Objects.equals(this.name, other.name))
-        {
+        if (!Objects.equals(this.name, other.name)) {
             return false;
         }
-        if (!Objects.equals(this.description, other.description))
-        {
+        if (!Objects.equals(this.description, other.description)) {
             return false;
         }
         return true;

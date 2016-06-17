@@ -87,7 +87,7 @@ public class Query
      */
     public String getDatabase()
     {
-        return (this.getDatabaseAsObject().name());
+        return (this.getDatabaseAsObject().getName());
     }
 
     /**

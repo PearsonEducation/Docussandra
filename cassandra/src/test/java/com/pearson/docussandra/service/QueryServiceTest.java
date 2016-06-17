@@ -68,9 +68,9 @@ public class QueryServiceTest
         assertNotNull(res.getUpdatedAt());
         assertNotNull(res.getUuid());
         assertNotNull(res.getId());
-        assertNotNull(res.object());
-        BSONObject expected = doc.object();
-        BSONObject actual = res.object();
+        assertNotNull(res.getObject());
+        BSONObject expected = doc.getObject();
+        BSONObject actual = res.getObject();
         assertEquals(expected, actual);
     }
 

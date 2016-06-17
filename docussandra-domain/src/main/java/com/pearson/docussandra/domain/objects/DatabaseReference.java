@@ -26,10 +26,10 @@ public class DatabaseReference
 
     public DatabaseReference(Database database)
     {
-        this(database.name());
+        this(database.getName());
     }
 
-    public String name()
+    public String getName()
     {
         return name;
     }

@@ -10,8 +10,8 @@ public class LinkableDocument extends Document implements Linkable
 {
     public LinkableDocument(Document d){
         super.setUuid(d.getUuid());
-        super.table(d.table());
-        super.object(d.object());
+        super.setTable(d.getTable());
+        super.setObject(d.getObject());
     }
     
 }
