@@ -140,6 +140,20 @@ public class Query
         this.limit = limit;
     }
 
+    /**
+     * @return the offset
+     */
+    public int getOffset() {
+        return offset;
+    }
+
+    /**
+     * @param offset the offset to set
+     */
+    public void setOffset(int offset) {
+        this.offset = offset;
+    }
+
     @Override
     public String toString()
     {
