@@ -12,6 +12,10 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 import java.util.Objects;
 import org.restexpress.plugin.hyperexpress.Linkable;
 
+/**
+ * Object that represents a table in Docussandra.
+ * @author Jeffrey DeYoung
+ */
 @ApiModel(value = "Table",
         description = "Model that defines a table including its name and description.")
 public class Table
@@ -48,6 +52,26 @@ public class Table
     public Table()
     {
         super();
+    }
+    
+    /**
+     * Constructor.
+     * @param databaseName Name of the database that this table is in.
+     * @param tableName Name of this table.
+     */
+    public Table(String databaseName, String tableName){
+        this.database = new DatabaseReference(name);
+        this.name = tableName;
+    }
+    
+    /**
+     * Constructor.
+     * @param database Database that this table is in.
+     * @param tableName Name of this table.
+     */
+    public Table(Database database, String tableName){
+        this.database = new DatabaseReference(name);
+        this.name = tableName;
     }
 
     /**
