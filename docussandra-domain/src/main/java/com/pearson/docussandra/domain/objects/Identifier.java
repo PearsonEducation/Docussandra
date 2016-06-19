@@ -129,7 +129,7 @@ public class Identifier
     public Table getTable()
     {
         Table t = new Table();
-        t.setDatabase(new Database(getDatabaseName()));
+        t.setDatabaseByObject(new Database(getDatabaseName()));
         t.setName(getTableName());
         return t;
     }

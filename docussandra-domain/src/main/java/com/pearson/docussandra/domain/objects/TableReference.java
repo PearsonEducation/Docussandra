@@ -48,7 +48,7 @@ public class TableReference
     public Table asObject()
     {
         Table t = new Table();
-        t.setDatabase(database);
+        t.setDatabaseByString(database);
         t.setName(name);
         return t;
     }

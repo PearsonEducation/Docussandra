@@ -328,7 +328,7 @@ public class IndexRepositoryImpl extends AbstractCRUDRepository<Index> implement
         Index i = new Index();
         i.setName(row.getString(Columns.NAME));
         Table t = new Table();
-        t.setDatabase(row.getString(Columns.DATABASE));
+        t.setDatabaseByString(row.getString(Columns.DATABASE));
         t.setName(row.getString(Columns.TABLE));
         i.setTable(t);
         i.isUnique(row.getBool(Columns.IS_UNIQUE));

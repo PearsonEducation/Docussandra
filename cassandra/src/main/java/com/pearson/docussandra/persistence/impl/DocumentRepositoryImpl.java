@@ -121,7 +121,7 @@ public class DocumentRepositoryImpl extends AbstractCRUDRepository<Document> imp
     public QueryResponseWrapper readAll(String database, String tableString, int limit, long offset)
     {
         Table table = new Table();
-        table.setDatabase(database);
+        table.setDatabaseByString(database);
         table.setName(tableString);
         long maxIndex = offset + limit;
         PreparedStatement readStmt = PreparedStatementFactory.getPreparedStatement(String.format(READ_ALL_CQL, table.toDbTable(), maxIndex + 1), getSession());//we do one plus here so we know if there are additional results

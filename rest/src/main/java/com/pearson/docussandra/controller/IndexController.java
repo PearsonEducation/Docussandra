@@ -59,7 +59,7 @@ public class IndexController
         Index entity = request.getBodyAs(Index.class, "Resource details not provided");
 
         Table t = new Table();
-        t.setDatabase(database);
+        t.setDatabaseByString(database);
         t.setName(table);
         entity.setTable(t);
         entity.setName(name);

@@ -14,6 +14,7 @@ import org.restexpress.plugin.hyperexpress.Linkable;
 
 /**
  * Object that represents a table in Docussandra.
+ *
  * @author Jeffrey DeYoung
  */
 @ApiModel(value = "Table",
@@ -53,23 +54,27 @@ public class Table
     {
         super();
     }
-    
+
     /**
      * Constructor.
+     *
      * @param databaseName Name of the database that this table is in.
      * @param tableName Name of this table.
      */
-    public Table(String databaseName, String tableName){
+    public Table(String databaseName, String tableName)
+    {
         this.database = new DatabaseReference(name);
         this.name = tableName;
     }
-    
+
     /**
      * Constructor.
+     *
      * @param database Database that this table is in.
      * @param tableName Name of this table.
      */
-    public Table(Database database, String tableName){
+    public Table(Database database, String tableName)
+    {
         this.database = new DatabaseReference(name);
         this.name = tableName;
     }
@@ -96,21 +101,23 @@ public class Table
     }
 
     /**
-     * Sets the database for this table.
+     * Sets the database for this table. Method is not overloaded with
+     * setDatabaseByString due to weird binding issues.
      *
      * @param database
      */
-    public void setDatabase(Database database)
+    public void setDatabaseByObject(Database database)
     {
         this.database = new DatabaseReference(database);
     }
 
     /**
-     * Sets the database for this table.
+     * Sets the database for this table. Method is not overloaded with
+     * setDatabaseByObject due to weird binding issues.
      *
      * @param name
      */
-    public void setDatabase(String name)
+    public void setDatabaseByString(String name)
     {
         this.database = new DatabaseReference(name);
     }

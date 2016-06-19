@@ -253,7 +253,7 @@ public class TableRepositoryImpl extends AbstractCRUDRepository<Table> implement
 
         Table c = new Table();
         c.setName(row.getString(Columns.NAME));
-        c.setDatabase(row.getString(Columns.DATABASE));
+        c.setDatabaseByString(row.getString(Columns.DATABASE));
         c.setDescription(row.getString(Columns.DESCRIPTION));
         c.setCreatedAt(row.getDate(Columns.CREATED_AT));
         c.setUpdatedAt(row.getDate(Columns.UPDATED_AT));

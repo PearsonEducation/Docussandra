@@ -897,7 +897,7 @@ public class Fixtures
     {
         Table t = new Table();
         t.setName("mytable");
-        t.setDatabase(Fixtures.DB);
+        t.setDatabaseByString(Fixtures.DB);
         t.setDescription("My Table stores a lot of data.");
         return t;
     }
@@ -911,7 +911,7 @@ public class Fixtures
     {
         Table testTable = new Table();
         testTable.setName("worldbankloans");
-        testTable.setDatabase(createTestWorldBankDatabase().getName());
+        testTable.setDatabaseByString(createTestWorldBankDatabase().getName());
         testTable.setDescription("This table stores data about World Bank loans.");
         return testTable;
     }
