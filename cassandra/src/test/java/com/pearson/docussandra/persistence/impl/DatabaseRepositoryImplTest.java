@@ -80,7 +80,7 @@ public class DatabaseRepositoryImplTest
         f.insertDatabase(entity);
         //act
         DatabaseRepository instance = new DatabaseRepositoryImpl(f.getSession());
-        entity.description("This is a new description!");
+        entity.setDescription("This is a new description!");
         Database result = instance.update(entity);
         //assert
         assertEquals(entity, result);

@@ -129,8 +129,8 @@ public class Identifier
     public Table getTable()
     {
         Table t = new Table();
-        t.database(new Database(getDatabaseName()));
-        t.name(getTableName());
+        t.setDatabaseByObject(new Database(getDatabaseName()));
+        t.setName(getTableName());
         return t;
     }
 

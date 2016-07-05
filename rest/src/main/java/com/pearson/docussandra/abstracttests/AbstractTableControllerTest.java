@@ -56,7 +56,7 @@ public abstract class AbstractTableControllerTest
         f.clearTestTables();
         Database testDb = Fixtures.createTestDatabase();
         f.insertDatabase(testDb);
-        RestAssured.basePath = "/databases/" + testDb.name() + "/tables/";
+        RestAssured.basePath = "/databases/" + testDb.getName() + "/tables/";
     }
 
     /**
@@ -88,11 +88,11 @@ public abstract class AbstractTableControllerTest
         Table testTable = Fixtures.createTestTable();
         f.insertTable(testTable);
         expect().statusCode(200)
-                .body("name", equalTo(testTable.name()))
-                .body("description", equalTo(testTable.description()))
+                .body("name", equalTo(testTable.getName()))
+                .body("description", equalTo(testTable.getDescription()))
                 .body("createdAt", notNullValue())
                 .body("updatedAt", notNullValue()).when()
-                .get(testTable.name());
+                .get(testTable.getName());
     }
 
     /**
@@ -103,23 +103,23 @@ public abstract class AbstractTableControllerTest
     public void postTableTest()
     {
         Table testTable = Fixtures.createTestTable();
-        String tableStr = "{" + "\"description\" : \"" + testTable.description()
-                + "\"," + "\"name\" : \"" + testTable.name() + "\"}";
+        String tableStr = "{" + "\"description\" : \"" + testTable.getDescription()
+                + "\"," + "\"name\" : \"" + testTable.getName() + "\"}";
         //act
         given().body(tableStr).expect().statusCode(201)
                 //.header("Location", startsWith(RestAssured.basePath + "/"))
-                .body("name", equalTo(testTable.name()))
-                .body("description", equalTo(testTable.description()))
+                .body("name", equalTo(testTable.getName()))
+                .body("description", equalTo(testTable.getDescription()))
                 .body("createdAt", notNullValue())
                 .body("updatedAt", notNullValue())
-                .when().post("/" + testTable.name());
+                .when().post("/" + testTable.getName());
         //check
         expect().statusCode(200)
-                .body("name", equalTo(testTable.name()))
-                .body("description", equalTo(testTable.description()))
+                .body("name", equalTo(testTable.getName()))
+                .body("description", equalTo(testTable.getDescription()))
                 .body("createdAt", notNullValue())
                 .body("updatedAt", notNullValue()).when()
-                .get(testTable.name());
+                .get(testTable.getName());
     }
 
     /**
@@ -133,19 +133,19 @@ public abstract class AbstractTableControllerTest
         f.insertTable(testTable);
         String newDesciption = "this is a new description";
         String tableStr = "{" + "\"description\" : \"" + newDesciption
-                + "\"," + "\"name\" : \"" + testTable.name() + "\"}";
+                + "\"," + "\"name\" : \"" + testTable.getName() + "\"}";
 
         //act
         given().body(tableStr).expect().statusCode(204)
-                .when().put(testTable.name());
+                .when().put(testTable.getName());
 
         //check
         expect().statusCode(200)
-                .body("name", equalTo(testTable.name()))
+                .body("name", equalTo(testTable.getName()))
                 .body("description", equalTo(newDesciption))
                 .body("createdAt", notNullValue())
                 .body("updatedAt", notNullValue()).when()
-                .get(testTable.name());
+                .get(testTable.getName());
     }
 
     /**
@@ -159,9 +159,9 @@ public abstract class AbstractTableControllerTest
         f.insertTable(testTable);
         //act
         given().expect().statusCode(204)
-                .when().delete(testTable.name());
+                .when().delete(testTable.getName());
         //check
         expect().statusCode(404).when()
-                .get(testTable.name());
+                .get(testTable.getName());
     }
 }

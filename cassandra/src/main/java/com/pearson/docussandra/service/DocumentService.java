@@ -72,8 +72,8 @@ public class DocumentService
         verifyTable(database, table);
 
         Document doc = new Document();
-        doc.table(database, table);
-        doc.objectAsString(json);
+        doc.setTable(database, table);
+        doc.setObjectAsString(json);
         doc.setUuid(UUID.randomUUID());//TODO: is this right? -- https://github.com/PearsonEducation/Docussandra/issues/4
         ValidationEngine.validateAndThrow(doc);
         try

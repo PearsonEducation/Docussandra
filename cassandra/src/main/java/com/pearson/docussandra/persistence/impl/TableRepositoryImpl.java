@@ -216,19 +216,19 @@ public class TableRepositoryImpl extends AbstractCRUDRepository<Table> implement
 
     private void bindCreate(BoundStatement bs, Table entity)
     {
-        bs.bind(entity.name(),
-                entity.database().name(),
-                entity.description(),
+        bs.bind(entity.getName(),
+                entity.getDatabase().getName(),
+                entity.getDescription(),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt());
     }
 
     private void bindUpdate(BoundStatement bs, Table entity)
     {
-        bs.bind(entity.description(),
+        bs.bind(entity.getDescription(),
                 entity.getUpdatedAt(),
-                entity.database().name(),
-                entity.name());
+                entity.getDatabase().getName(),
+                entity.getName());
     }
 
     private List<Table> marshalAll(ResultSet rs)
@@ -252,9 +252,9 @@ public class TableRepositoryImpl extends AbstractCRUDRepository<Table> implement
         }
 
         Table c = new Table();
-        c.name(row.getString(Columns.NAME));
-        c.database(row.getString(Columns.DATABASE));
-        c.description(row.getString(Columns.DESCRIPTION));
+        c.setName(row.getString(Columns.NAME));
+        c.setDatabaseByString(row.getString(Columns.DATABASE));
+        c.setDescription(row.getString(Columns.DESCRIPTION));
         c.setCreatedAt(row.getDate(Columns.CREATED_AT));
         c.setUpdatedAt(row.getDate(Columns.UPDATED_AT));
         return c;

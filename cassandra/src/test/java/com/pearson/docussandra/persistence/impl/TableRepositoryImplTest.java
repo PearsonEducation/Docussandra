@@ -121,10 +121,10 @@ public class TableRepositoryImplTest
         Table created = instance.create(entity);
         assertEquals(entity, created);
         String newDesciption = "this is a new description";
-        created.description(newDesciption);
+        created.setDescription(newDesciption);
         Table result = instance.update(entity);
         assertEquals(created, result);
-        result.name("new_name1");
+        result.setName("new_name1");
         Table resultNew = instance.update(entity);
         assertEquals(result, resultNew);
         instance.delete(resultNew.getId());
@@ -214,7 +214,7 @@ public class TableRepositoryImplTest
         System.out.println("readAll");
         Table testTable = Fixtures.createTestTable();
         f.insertTable(testTable);
-        String database = testTable.databaseName();
+        String database = testTable.getDatabaseName();
         TableRepository instance = new TableRepositoryImpl(f.getSession());
         List<Table> expResult = new ArrayList<>();
         expResult.add(testTable);
@@ -231,7 +231,7 @@ public class TableRepositoryImplTest
         System.out.println("countAllTables");
         TableRepository instance = new TableRepositoryImpl(f.getSession());
         Table testTable = Fixtures.createTestTable();
-        String database = testTable.databaseName();
+        String database = testTable.getDatabaseName();
         long result = instance.countAllTables(database);
         long expResult = 0L;
         assertEquals(expResult, result);
@@ -250,8 +250,8 @@ public class TableRepositoryImplTest
         System.out.println("countTableSize");
         TableRepository instance = new TableRepositoryImpl(f.getSession());
         Table testTable = Fixtures.createTestTable();
-        String database = testTable.databaseName();
-        String tableName = testTable.name();
+        String database = testTable.getDatabaseName();
+        String tableName = testTable.getName();
         f.insertTable(testTable);
         long expResult = 0L;
         long result = instance.countTableSize(database, tableName);

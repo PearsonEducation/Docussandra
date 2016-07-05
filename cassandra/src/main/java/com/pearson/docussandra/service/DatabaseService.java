@@ -56,7 +56,7 @@ public class DatabaseService
 
     public void update(Database entity)
     {
-        logger.info("Attempting to update database: " + entity.name());
+        logger.info("Attempting to update database: " + entity.getName());
         ValidationEngine.validateAndThrow(entity);
         databases.update(entity);
     }

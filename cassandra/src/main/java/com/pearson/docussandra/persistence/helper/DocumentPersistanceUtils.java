@@ -45,7 +45,7 @@ public class DocumentPersistanceUtils
             byte[] result = new byte[b.remaining()];
             b.get(result);
             BSONObject o = BSON.decode(result);
-            d.object(o);
+            d.setObject(o);
         }
         d.setCreatedAt(row.getDate(DocumentRepositoryImpl.Columns.CREATED_AT));
         d.setUpdatedAt(row.getDate(DocumentRepositoryImpl.Columns.UPDATED_AT));

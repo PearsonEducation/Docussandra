@@ -74,7 +74,7 @@ public class IndexMaintainerHelper
         BoundStatement bs = new BoundStatement(ps);
         //pull the index fieldsData out of the document for binding
         DBObject jsonObject = new BasicDBObject();
-        jsonObject.putAll(entity.object());
+        jsonObject.putAll(entity.getObject());
         //set the bucket
         Object fieldToBucketOnObject = jsonObject.get(fieldsData.get(0).getField());//pull the field to bucket on out of the document
         if (fieldToBucketOnObject == null)
@@ -99,7 +99,7 @@ public class IndexMaintainerHelper
         //set the id
         bs.setUUID(1, entity.getUuid());
         //set the blob
-        BSONObject bson = (BSONObject) entity.object();
+        BSONObject bson = (BSONObject) entity.getObject();
         bs.setBytes(2, ByteBuffer.wrap(BSON.encode(bson)));
         //set the dates
         bs.setDate(3, entity.getCreatedAt());
@@ -156,12 +156,12 @@ public class IndexMaintainerHelper
                 BoundStatement updateBS = new BoundStatement(ps);
 
                 //set the blob
-                BSONObject bson = (BSONObject) entity.object();
+                BSONObject bson = (BSONObject) entity.getObject();
                 updateBS.setBytes(0, ByteBuffer.wrap(BSON.encode(bson)));
                 //set the date
                 updateBS.setDate(1, entity.getUpdatedAt());
                 //pull the index getFields out of the document for binding
-                DBObject jsonObject = (DBObject) entity.object();
+                DBObject jsonObject = (DBObject) entity.getObject();
                 //set the bucket
                 Object bucketField = jsonObject.get(fields.get(0).getField());
                 if (bucketField == null)
@@ -213,7 +213,7 @@ public class IndexMaintainerHelper
         //for each index
         for (Index index : indices)
         {
-            BoundStatement bs = generateDocumentDeleteIndexEntryStatement(session, index, entity.object(), bucketLocator);
+            BoundStatement bs = generateDocumentDeleteIndexEntryStatement(session, index, entity.getObject(), bucketLocator);
             if (bs != null)
             {
                 statementList.add(bs);
@@ -298,7 +298,7 @@ public class IndexMaintainerHelper
     public static boolean hasIndexedFieldChanged(BSONObject oldObject, Index index, Document entity)
     {
         //DocumentRepository docRepo = new DocumentRepositoryImpl(session);
-        BSONObject newObject = entity.object();
+        BSONObject newObject = entity.getObject();
         //BSONObject oldObject = (BSONObject) JSON.parse(docRepo.read(entity.getId()).object());
         for (IndexField indexField : index.getFields())
         {
@@ -322,7 +322,7 @@ public class IndexMaintainerHelper
     public static BSONObject getOldObjectForUpdate(Session session, Document entity)
     {
         DocumentRepositoryImpl docRepo = new DocumentRepositoryImpl(session);
-        return docRepo.read(entity.getId()).object();
+        return docRepo.read(entity.getId()).getObject();
     }
 
     /**

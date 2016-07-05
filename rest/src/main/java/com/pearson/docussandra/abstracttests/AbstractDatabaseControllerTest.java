@@ -106,11 +106,11 @@ public abstract class AbstractDatabaseControllerTest
         Database testDb = Fixtures.createTestDatabase();
         f.insertDatabase(testDb);
         expect().statusCode(200)
-                .body("name", equalTo(testDb.name()))
-                .body("description", equalTo(testDb.description()))
+                .body("name", equalTo(testDb.getName()))
+                .body("description", equalTo(testDb.getDescription()))
                 .body("createdAt", notNullValue())
                 .body("updatedAt", notNullValue()).when()
-                .get("/" + testDb.name());
+                .get("/" + testDb.getName());
     }
 
     /**
@@ -120,23 +120,23 @@ public abstract class AbstractDatabaseControllerTest
     public void postDatabaseTest()
     {
         Database testDb = Fixtures.createTestDatabase();
-        String dbStr = "{" + "\"description\" : \"" + testDb.description()
-                + "\"," + "\"name\" : \"" + testDb.name() + "\"}";
+        String dbStr = "{" + "\"description\" : \"" + testDb.getDescription()
+                + "\"," + "\"name\" : \"" + testDb.getName() + "\"}";
         //act
         given().body(dbStr).expect().statusCode(201)
                 //.header("Location", startsWith(RestAssured.basePath + "/"))
-                .body("name", equalTo(testDb.name()))
-                .body("description", equalTo(testDb.description()))
+                .body("name", equalTo(testDb.getName()))
+                .body("description", equalTo(testDb.getDescription()))
                 .body("createdAt", notNullValue())
                 .body("updatedAt", notNullValue())
-                .when().post(testDb.name());
+                .when().post(testDb.getName());
         //check
         expect().statusCode(200)
-                .body("name", equalTo(testDb.name()))
-                .body("description", equalTo(testDb.description()))
+                .body("name", equalTo(testDb.getName()))
+                .body("description", equalTo(testDb.getDescription()))
                 .body("createdAt", notNullValue())
                 .body("updatedAt", notNullValue()).when()
-                .get("/" + testDb.name());
+                .get("/" + testDb.getName());
     }
 
     /**
@@ -149,17 +149,17 @@ public abstract class AbstractDatabaseControllerTest
         f.insertDatabase(testDb);
         String newDesciption = "this is a new description";
         String dbStr = "{" + "\"description\" : \"" + newDesciption
-                + "\"," + "\"name\" : \"" + testDb.name() + "\"}";
+                + "\"," + "\"name\" : \"" + testDb.getName() + "\"}";
         //act
         given().body(dbStr).expect().statusCode(204)
-                .when().put(testDb.name());
+                .when().put(testDb.getName());
         //check
         expect().statusCode(200)
-                .body("name", equalTo(testDb.name()))
+                .body("name", equalTo(testDb.getName()))
                 .body("description", equalTo(newDesciption))
                 .body("createdAt", notNullValue())
                 .body("updatedAt", notNullValue()).when()
-                .get("/" + testDb.name());
+                .get("/" + testDb.getName());
 
     }
 
@@ -173,10 +173,10 @@ public abstract class AbstractDatabaseControllerTest
         f.insertDatabase(testDb);
         //act
         given().expect().statusCode(204)
-                .when().delete(testDb.name());
+                .when().delete(testDb.getName());
         //check
         expect().statusCode(404).when()
-                .get(testDb.name());
+                .get(testDb.getName());
     }
 
     /**
@@ -195,11 +195,11 @@ public abstract class AbstractDatabaseControllerTest
         f.insertDocument(Fixtures.createTestDocument());
         //act
         given().expect().statusCode(204)
-                .when().delete(testDb.name());
+                .when().delete(testDb.getName());
         //Thread.sleep(5000);
         //check DB deletion
         expect().statusCode(404).when()
-                .get(testDb.name());
+                .get(testDb.getName());
         //check table deletion (using direct db calls instead of REST-- being slightly lazy here)
         TableRepositoryImpl tableRepo = new TableRepositoryImpl(f.getSession());
         assertFalse(tableRepo.exists(Fixtures.createTestTable().getId()));

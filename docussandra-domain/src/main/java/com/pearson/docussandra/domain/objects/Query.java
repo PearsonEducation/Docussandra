@@ -2,24 +2,55 @@ package com.pearson.docussandra.domain.objects;
 
 import java.util.List;
 
+/**
+ * Domain object that represents a query against Docussandra.
+ *
+ * @author Jeffrey DeYoung
+ */
 public class Query
 {
 
+    /**
+     * Default limit for the number of records to return. This is likely
+     * overridden elsewhere.
+     */
     private static int DEFAULT_LIMIT = 100;
 
+    /**
+     * Database to query against.
+     */
     private DatabaseReference database;
     //	public Map<String, String> variables;
     //	@Required("Table name")
 
+    /**
+     * Table to query against.
+     */
     private TableReference tables;
 
+    /**
+     * Columns to query on.
+     */
     //	@Required("Columns")
     private List<String> columns;//TODO: https://github.com/PearsonEducation/Docussandra/issues/12
 
+    /**
+     * Where clause of the Query.
+     */
     private String where;
-    private int limit = DEFAULT_LIMIT;
-    public int offset;
 
+    /**
+     * Set our limit to the default until it is overridden.
+     */
+    private int limit = DEFAULT_LIMIT;
+    /**
+     * Offset index to start returning the results from.
+     */
+    private int offset;
+
+    /**
+     * Default constructor (needed for automatic serialization).
+     */
     public Query()
     {
     }
@@ -42,6 +73,7 @@ public class Query
 
     /**
      * Creates a new database reference with the name provided
+     *
      * @param name Database to associate with this query.
      */
     public void setDatabase(String name)
@@ -55,20 +87,21 @@ public class Query
      */
     public String getDatabase()
     {
-        return (this.database().name());
+        return (this.getDatabaseAsObject().getName());
     }
 
     /**
      * get database details as an object
      *
      */
-    public Database database()
+    public Database getDatabaseAsObject()
     {
         return database.asObject();
     }
 
     /**
      * Get table details as an object
+     *
      * @return Table object for this query.
      */
     public Table getTableAsObject()
@@ -143,14 +176,16 @@ public class Query
     /**
      * @return the offset
      */
-    public int getOffset() {
+    public int getOffset()
+    {
         return offset;
     }
 
     /**
      * @param offset the offset to set
      */
-    public void setOffset(int offset) {
+    public void setOffset(int offset)
+    {
         this.offset = offset;
     }
 

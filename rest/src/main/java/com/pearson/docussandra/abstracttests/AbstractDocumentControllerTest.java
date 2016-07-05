@@ -68,7 +68,7 @@ public abstract class AbstractDocumentControllerTest
         f.insertDatabase(testDb);
         Table testTable = Fixtures.createTestTable();
         f.insertTable(testTable);
-        RestAssured.basePath = "/databases/" + testDb.name() + "/tables/" + testTable.name() + "/documents";
+        RestAssured.basePath = "/databases/" + testDb.getName() + "/tables/" + testTable.getName() + "/documents";
     }
 
     /**
@@ -122,7 +122,7 @@ public abstract class AbstractDocumentControllerTest
     public void postDocumentTest()
     {
         Document testDocument = Fixtures.createTestDocument();
-        String documentStr = testDocument.objectAsString();
+        String documentStr = testDocument.getObjectAsString();
 
         //act
         Response r = given().body(documentStr).expect().statusCode(201)
@@ -158,7 +158,7 @@ public abstract class AbstractDocumentControllerTest
         //create the index first so we are sure it will get parsed
         f.insertIndex(Fixtures.createTestIndexAllFieldTypes());
         Document testDocument = Fixtures.createTestDocument3();
-        String documentStr = testDocument.objectAsString();
+        String documentStr = testDocument.getObjectAsString();
 
         //act
         Response r = given().body(documentStr).expect().statusCode(201)
@@ -324,7 +324,7 @@ public abstract class AbstractDocumentControllerTest
 
         Document testDocument = Fixtures.createTestDocument3();
         f.insertDocument(testDocument);
-        String newObject = testDocument.objectAsString();
+        String newObject = testDocument.getObjectAsString();
         //act
         given().body(newObject).expect().statusCode(204)
                 .when().put(testDocument.getUuid().toString());

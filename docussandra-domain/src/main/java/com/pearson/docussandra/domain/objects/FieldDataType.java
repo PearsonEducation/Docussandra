@@ -8,26 +8,67 @@ package com.pearson.docussandra.domain.objects;
 public enum FieldDataType
 {
 
+    /**
+     * Use when indexing on normal strings.
+     */
     TEXT,
+    /**
+     * Use when indexing on date times that could occur in any century. Date of
+     * birth and historical/cosmological events are probably appropriate here.
+     * Will support very wide ranges of dates well.
+     */
     DATE_TIME,
+    /**
+     * Use when you need to index on double-style data.
+     */
     DOUBLE,
+    /**
+     * Use when you need to index on integer-style data.
+     */
     INTEGER,
+    /**
+     * Use when you need to index on long-style data.
+     */
     LONG,
+    /**
+     * Use when you need to index on boolean data. Note, this type of index
+     * should probably not be used as a primary index, it will not perform well.
+     * It should be used as your last compound index if possible.
+     */
     BOOLEAN,
+    /**
+     * Use when you need to index on UUIDs.
+     */
     UUID,
+    /**
+     * Use when you need to index on binary data. Note, this will likely not be
+     * your best option unless you have truly binary data. If you can use one of
+     * the other data-types, it would be to your advantage in terms of
+     * performance.
+     */
     BINARY,
+    /**
+     * Use when you need to index on relatively recent/future dates with a high
+     * precision. This index type is appropriate for timestamps with millisecond
+     * precision. DATE_TIME will work for these types of dates as well, however,
+     * this will perform better on more recent dates.
+     */
     TIMEPOINT;
-    
+
     /**
      * Get the total number of datatypes that this object supports.
+     *
      * @return The total number of datatypes that this object supports.
      */
-    public static int getNumberOfDataTypes(){
+    public static int getNumberOfDataTypes()
+    {
         return 9;
     }
 
     /**
-     * Gets a numeric index indicating what type of FieldDataType this is for use in an array or the like.
+     * Gets a numeric index indicating what type of FieldDataType this is for
+     * use in an array or the like.
+     *
      * @return An int index for this FieldDataType
      */
     public int getIndexForDataType()

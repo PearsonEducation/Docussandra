@@ -93,9 +93,9 @@ public class QueryRepositoryImplTest
         assertNotNull(res.getUpdatedAt());
         assertNotNull(res.getUuid());
         assertNotNull(res.getId());
-        assertNotNull(res.object());
-        BSONObject expected = doc.object();
-        BSONObject actual = res.object();
+        assertNotNull(res.getObject());
+        BSONObject expected = doc.getObject();
+        BSONObject actual = res.getObject();
         assertEquals(expected, actual);
     }
 
@@ -157,11 +157,11 @@ public class QueryRepositoryImplTest
         assertNotNull(result);
         assertTrue(!result.isEmpty());
         assertTrue(result.size() == 5);
-        assertTrue(result.get(0).objectAsString().contains("\"field2\" : \"this is some more random data32\""));
-        assertTrue(result.get(1).objectAsString().contains("\"field2\" : \"this is some more random data31\""));
-        assertTrue(result.get(2).objectAsString().contains("\"field2\" : \"this is some more random data30\""));
-        assertTrue(result.get(3).objectAsString().contains("\"field2\" : \"this is some more random data29\""));
-        assertTrue(result.get(4).objectAsString().contains("\"field2\" : \"this is some more random data28\""));
+        assertTrue(result.get(0).getObjectAsString().contains("\"field2\" : \"this is some more random data32\""));
+        assertTrue(result.get(1).getObjectAsString().contains("\"field2\" : \"this is some more random data31\""));
+        assertTrue(result.get(2).getObjectAsString().contains("\"field2\" : \"this is some more random data30\""));
+        assertTrue(result.get(3).getObjectAsString().contains("\"field2\" : \"this is some more random data29\""));
+        assertTrue(result.get(4).getObjectAsString().contains("\"field2\" : \"this is some more random data28\""));
         assertTrue(result.getNumAdditionalResults() == null);
 
         //now lets get the second 5
@@ -169,11 +169,11 @@ public class QueryRepositoryImplTest
         assertNotNull(result);
         assertTrue(!result.isEmpty());
         assertTrue(result.size() == 5);
-        assertTrue(result.get(0).objectAsString().contains("\"field2\" : \"this is some more random data27\""));
-        assertTrue(result.get(1).objectAsString().contains("\"field2\" : \"this is some more random data26\""));
-        assertTrue(result.get(2).objectAsString().contains("\"field2\" : \"this is some more random data25\""));
-        assertTrue(result.get(3).objectAsString().contains("\"field2\" : \"this is some more random data24\""));
-        assertTrue(result.get(4).objectAsString().contains("\"field2\" : \"this is some more random data23\""));
+        assertTrue(result.get(0).getObjectAsString().contains("\"field2\" : \"this is some more random data27\""));
+        assertTrue(result.get(1).getObjectAsString().contains("\"field2\" : \"this is some more random data26\""));
+        assertTrue(result.get(2).getObjectAsString().contains("\"field2\" : \"this is some more random data25\""));
+        assertTrue(result.get(3).getObjectAsString().contains("\"field2\" : \"this is some more random data24\""));
+        assertTrue(result.get(4).getObjectAsString().contains("\"field2\" : \"this is some more random data23\""));
         assertTrue(result.getNumAdditionalResults() == null);
 
         //now lets get the third 5
@@ -181,11 +181,11 @@ public class QueryRepositoryImplTest
         assertNotNull(result);
         assertTrue(!result.isEmpty());
         assertTrue(result.size() == 5);
-        assertTrue(result.get(0).objectAsString().contains("\"field2\" : \"this is some more random data22\""));
-        assertTrue(result.get(1).objectAsString().contains("\"field2\" : \"this is some more random data21\""));
-        assertTrue(result.get(2).objectAsString().contains("\"field2\" : \"this is some more random data20\""));
-        assertTrue(result.get(3).objectAsString().contains("\"field2\" : \"this is some more random data19\""));
-        assertTrue(result.get(4).objectAsString().contains("\"field2\" : \"this is some more random data18\""));
+        assertTrue(result.get(0).getObjectAsString().contains("\"field2\" : \"this is some more random data22\""));
+        assertTrue(result.get(1).getObjectAsString().contains("\"field2\" : \"this is some more random data21\""));
+        assertTrue(result.get(2).getObjectAsString().contains("\"field2\" : \"this is some more random data20\""));
+        assertTrue(result.get(3).getObjectAsString().contains("\"field2\" : \"this is some more random data19\""));
+        assertTrue(result.get(4).getObjectAsString().contains("\"field2\" : \"this is some more random data18\""));
         assertTrue(result.getNumAdditionalResults() == null);
 
         //now lets get the last 4
@@ -193,10 +193,10 @@ public class QueryRepositoryImplTest
         assertNotNull(result);
         assertTrue(!result.isEmpty());
         assertTrue(result.size() == 4);
-        assertTrue(result.get(0).objectAsString().contains("\"field2\" : \"this is some more random data2\""));
-        assertTrue(result.get(1).objectAsString().contains("\"field2\" : \"this is some more random data1\""));
-        assertTrue(result.get(2).objectAsString().contains("\"field2\" : \"this is some more random data\""));
-        assertTrue(result.get(3).objectAsString().contains("\"field2\" : \"this is some random data\""));
+        assertTrue(result.get(0).getObjectAsString().contains("\"field2\" : \"this is some more random data2\""));
+        assertTrue(result.get(1).getObjectAsString().contains("\"field2\" : \"this is some more random data1\""));
+        assertTrue(result.get(2).getObjectAsString().contains("\"field2\" : \"this is some more random data\""));
+        assertTrue(result.get(3).getObjectAsString().contains("\"field2\" : \"this is some random data\""));
         assertTrue(result.getNumAdditionalResults() == 0);
 
     }
