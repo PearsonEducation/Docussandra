@@ -7,36 +7,30 @@ import java.util.Date;
  *
  * @author https://github.com/JeffreyDeYoung
  */
-public abstract class Timestamped
-{
+public abstract class Timestamped {
 
-    private Date createdAt;
-    private Date updatedAt;
+  private Date createdAt;
+  private Date updatedAt;
 
-    public Timestamped()
-    {
-        //default for now
-        createdAt = new Date();
-        updatedAt = new Date();
-    }
+  public Timestamped() {
+    // default for now
+    createdAt = new Date();
+    updatedAt = new Date();
+  }
 
-    public Date getCreatedAt()
-    {
-        return (createdAt == null ? null : new Date(createdAt.getTime()));
-    }
+  public Date getCreatedAt() {
+    return (createdAt == null ? null : new Date(createdAt.getTime()));
+  }
 
-    public Date getUpdatedAt()
-    {
-        return (updatedAt == null ? null : new Date(updatedAt.getTime()));
-    }
+  public Date getUpdatedAt() {
+    return (updatedAt == null ? null : new Date(updatedAt.getTime()));
+  }
 
-    public void setCreatedAt(Date date)
-    {
-        this.createdAt = (date == null ? new Date() : new Date(date.getTime()));
-    }
+  public void setCreatedAt(Date date) {
+    this.createdAt = (date == null ? new Date() : new Date(date.getTime()));
+  }
 
-    public void setUpdatedAt(Date date)
-    {
-        this.updatedAt = (date == null ? new Date() : new Date(date.getTime()));
-    }
+  public void setUpdatedAt(Date date) {
+    this.updatedAt = (date == null ? new Date() : new Date(date.getTime()));
+  }
 }

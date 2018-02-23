@@ -24,127 +24,118 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This is the 'controller' layer, where HTTP details are converted to domain
- * concepts and passed to the service layer. Then service layer response
- * information is enhanced with HTTP details, if applicable, for the response.
+ * This is the 'controller' layer, where HTTP details are converted to domain concepts and passed to
+ * the service layer. Then service layer response information is enhanced with HTTP details, if
+ * applicable, for the response.
  * <p/>
- * This controller demonstrates how to process a Cassandra entity that is
- * identified by a single, primary row key such as a UUID.
+ * This controller demonstrates how to process a Cassandra entity that is identified by a single,
+ * primary row key such as a UUID.
  */
-public class IndexController
-{
+public class IndexController {
 
-    private static final UrlBuilder LOCATION_BUILDER = new UrlBuilder();
-    private static final Logger LOGGER = LoggerFactory.getLogger(IndexController.class);
+  private static final UrlBuilder LOCATION_BUILDER = new UrlBuilder();
+  private static final Logger LOGGER = LoggerFactory.getLogger(IndexController.class);
 
-    private IndexService indexes;
+  private IndexService indexes;
 
-    public IndexController(IndexService indexService)
-    {
-        super();
-        this.indexes = indexService;
+  public IndexController(IndexService indexService) {
+    super();
+    this.indexes = indexService;
+  }
+
+  @ApiOperation(value = "create an index", notes = "use this route to create a record",
+      response = IndexCreatedEvent.class)
+  @ApiModelRequest(model = IndexCreatedEvent.class, required = false,
+      modelName = "IndexCreatedEvent")
+  public IndexCreatedEvent create(Request request, Response response) throws Exception {
+    String database = request.getHeader(Constants.Url.DATABASE, "No database provided");
+    String table = request.getHeader(Constants.Url.TABLE, "No table provided");
+    String name = request.getHeader(Constants.Url.INDEX, "No index name provided");
+    // TODO: check name passed in with url and name in domain object
+    // https://github.com/PearsonEducation/Docussandra/issues/11
+
+    Index entity = request.getBodyAs(Index.class, "Resource details not provided");
+
+    Table t = new Table();
+    t.setDatabaseByString(database);
+    t.setName(table);
+    entity.setTable(t);
+    entity.setName(name);
+    if (entity.getIncludeOnly() == null) {
+      entity.setIncludeOnly(new ArrayList<String>(0));
     }
-
-    @ApiOperation(value = "create an index",
-            notes = "use this route to create a record",
-            response = IndexCreatedEvent.class)
-    @ApiModelRequest(model = IndexCreatedEvent.class, required = false, modelName = "IndexCreatedEvent")
-    public IndexCreatedEvent create(Request request, Response response) throws Exception
-    {
-        String database = request.getHeader(Constants.Url.DATABASE, "No database provided");
-        String table = request.getHeader(Constants.Url.TABLE, "No table provided");
-        String name = request.getHeader(Constants.Url.INDEX, "No index name provided");
-        //TODO: check name passed in with url and name in domain object https://github.com/PearsonEducation/Docussandra/issues/11
-
-        Index entity = request.getBodyAs(Index.class, "Resource details not provided");
-
-        Table t = new Table();
-        t.setDatabaseByString(database);
-        t.setName(table);
-        entity.setTable(t);
-        entity.setName(name);
-        if (entity.getIncludeOnly() == null)
-        {
-            entity.setIncludeOnly(new ArrayList<String>(0));
-        }
-        IndexCreatedEvent status;
-        try
-        {
-            status = indexes.create(entity);
-        } catch (Exception e)
-        {
-            LOGGER.error("Could not save index", e);
-            throw e;
-        }
-        // Construct the response for create...
-        response.setResponseCreated();
-
-        // enrich the resource with links, etc. here...
-        TokenResolver resolver = HyperExpress.bind(Constants.Url.TABLE, status.getIndex().getTableName())
-                .bind(Constants.Url.DATABASE, status.getIndex().getDatabaseName())
-                .bind(Constants.Url.INDEX, status.getIndex().getName())
-                .bind(Constants.Url.INDEX_STATUS, status.getUuid().toString());
-
-        // Include the Location header...
-        String locationPattern = request.getNamedUrl(HttpMethod.GET, Constants.Routes.INDEX);
-        response.addLocationHeader(LOCATION_BUILDER.build(locationPattern, resolver));
-        // Return the newly-created resource...
-        return status;
+    IndexCreatedEvent status;
+    try {
+      status = indexes.create(entity);
+    } catch (Exception e) {
+      LOGGER.error("Could not save index", e);
+      throw e;
     }
+    // Construct the response for create...
+    response.setResponseCreated();
 
-    @ApiOperation(value = "read an index",
-            notes = "this route is for getting the details for an index",
-            response = Index.class)
-    @ApiModelRequest(model = Index.class, required = false, modelName = "Index")
-    public Index read(Request request, Response response)
-    {
-        String database = request.getHeader(Constants.Url.DATABASE, "No database provided");
-        String table = request.getHeader(Constants.Url.TABLE, "No table provided");
-        String name = request.getHeader(Constants.Url.INDEX, "No index name provided");
-        Index entity = indexes.read(new Identifier(database, table, name));
+    // enrich the resource with links, etc. here...
+    TokenResolver resolver =
+        HyperExpress.bind(Constants.Url.TABLE, status.getIndex().getTableName())
+            .bind(Constants.Url.DATABASE, status.getIndex().getDatabaseName())
+            .bind(Constants.Url.INDEX, status.getIndex().getName())
+            .bind(Constants.Url.INDEX_STATUS, status.getUuid().toString());
 
-        // enrich the entity with links, etc. here...
-        HyperExpress.bind(Constants.Url.TABLE, entity.getTableName())
-                .bind(Constants.Url.DATABASE, entity.getDatabaseName())
-                .bind(Constants.Url.INDEX, entity.getName());
-//add: .bind(Constants.Url.INDEX_STATUS, status.getUuid().toString());//we don't have this information without doing another lookup
-        return entity;
-    }
+    // Include the Location header...
+    String locationPattern = request.getNamedUrl(HttpMethod.GET, Constants.Routes.INDEX);
+    response.addLocationHeader(LOCATION_BUILDER.build(locationPattern, resolver));
+    // Return the newly-created resource...
+    return status;
+  }
 
-    @ApiOperation(value = "read all the indexes",
-            notes = "use this route to get all the indexes",
-            response = Index.class)
-    @ApiModelRequest(model = Index.class, required = false, modelName = "Index")
-    public List<Index> readAll(Request request, Response response)
-    {
-        String database = request.getHeader(Constants.Url.DATABASE, "No database provided");
-        String table = request.getHeader(Constants.Url.TABLE, "No table provided");
+  @ApiOperation(value = "read an index",
+      notes = "this route is for getting the details for an index", response = Index.class)
+  @ApiModelRequest(model = Index.class, required = false, modelName = "Index")
+  public Index read(Request request, Response response) {
+    String database = request.getHeader(Constants.Url.DATABASE, "No database provided");
+    String table = request.getHeader(Constants.Url.TABLE, "No table provided");
+    String name = request.getHeader(Constants.Url.INDEX, "No index name provided");
+    Index entity = indexes.read(new Identifier(database, table, name));
 
-        HyperExpress.tokenBinder(new TokenBinder<Index>()
-        {
-            @Override
-            public void bind(Index object, TokenResolver resolver)
-            {
-                resolver.bind(Constants.Url.TABLE, object.getTableName())
-                        .bind(Constants.Url.DATABASE, object.getDatabaseName())
-                        .bind(Constants.Url.INDEX, object.getName());
-                //add: .bind(Constants.Url.INDEX_STATUS, status.getUuid().toString());//we don't have this information without doing another lookup
+    // enrich the entity with links, etc. here...
+    HyperExpress.bind(Constants.Url.TABLE, entity.getTableName())
+        .bind(Constants.Url.DATABASE, entity.getDatabaseName())
+        .bind(Constants.Url.INDEX, entity.getName());
+    // add: .bind(Constants.Url.INDEX_STATUS, status.getUuid().toString());//we don't have this
+    // information without doing another lookup
+    return entity;
+  }
 
-            }
-        });
+  @ApiOperation(value = "read all the indexes", notes = "use this route to get all the indexes",
+      response = Index.class)
+  @ApiModelRequest(model = Index.class, required = false, modelName = "Index")
+  public List<Index> readAll(Request request, Response response) {
+    String database = request.getHeader(Constants.Url.DATABASE, "No database provided");
+    String table = request.getHeader(Constants.Url.TABLE, "No table provided");
 
-        return indexes.readAll(database, table);
-    }
+    HyperExpress.tokenBinder(new TokenBinder<Index>() {
+      @Override
+      public void bind(Index object, TokenResolver resolver) {
+        resolver.bind(Constants.Url.TABLE, object.getTableName())
+            .bind(Constants.Url.DATABASE, object.getDatabaseName())
+            .bind(Constants.Url.INDEX, object.getName());
+        // add: .bind(Constants.Url.INDEX_STATUS, status.getUuid().toString());//we don't have this
+        // information without doing another lookup
 
-    @ApiOperation(value = "delete the index",
-            notes = "delete the index Warning: once the index is deleted cant be restored")
-    @ApiModelRequest(model = Index.class, required = false, modelName = "Index")
-    public void delete(Request request, Response response)
-    {
-        String database = request.getHeader(Constants.Url.DATABASE, "No database provided");
-        String table = request.getHeader(Constants.Url.TABLE, "No table provided");
-        String name = request.getHeader(Constants.Url.INDEX, "No index name provided");
-        indexes.delete(new Identifier(database, table, name));
-        response.setResponseNoContent();
-    }
+      }
+    });
+
+    return indexes.readAll(database, table);
+  }
+
+  @ApiOperation(value = "delete the index",
+      notes = "delete the index Warning: once the index is deleted cant be restored")
+  @ApiModelRequest(model = Index.class, required = false, modelName = "Index")
+  public void delete(Request request, Response response) {
+    String database = request.getHeader(Constants.Url.DATABASE, "No database provided");
+    String table = request.getHeader(Constants.Url.TABLE, "No table provided");
+    String name = request.getHeader(Constants.Url.INDEX, "No index name provided");
+    indexes.delete(new Identifier(database, table, name));
+    response.setResponseNoContent();
+  }
 }

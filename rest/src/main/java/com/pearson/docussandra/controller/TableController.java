@@ -18,112 +18,101 @@ import com.strategicgains.hyperexpress.builder.TokenBinder;
 import com.strategicgains.hyperexpress.builder.TokenResolver;
 import com.strategicgains.hyperexpress.builder.UrlBuilder;
 
-public class TableController
-{
+public class TableController {
 
-    private static final UrlBuilder LOCATION_BUILDER = new UrlBuilder();
+  private static final UrlBuilder LOCATION_BUILDER = new UrlBuilder();
 
-    private TableService service;
+  private TableService service;
 
-    public TableController(TableService collectionsService)
-    {
-        super();
-        this.service = collectionsService;
+  public TableController(TableService collectionsService) {
+    super();
+    this.service = collectionsService;
+  }
+
+  @ApiOperation(value = "create a  table",
+      notes = "This  method creates a  table it accepts name and description in the request body but both are optional",
+      response = Table.class)
+  @ApiModelRequest(model = Table.class, required = false, modelName = " Table")
+  public Table create(Request request, Response response) {
+    String databaseName = request.getHeader(Constants.Url.DATABASE, "No database provided");
+    String tableName = request.getHeader(Constants.Url.TABLE, "No table provided");
+    Table table = request.getBodyAs(Table.class);
+
+    if (table == null) {
+      table = new Table();
     }
 
-    @ApiOperation(value = "create a  table",
-            notes = "This  method creates a  table it accepts name and description in the request body but both are optional",
-            response =  Table.class)
-    @ApiModelRequest(model =  Table.class, required = false, modelName = " Table")
-    public Table create(Request request, Response response)
-    {
-        String databaseName = request.getHeader(Constants.Url.DATABASE, "No database provided");
-        String tableName = request.getHeader(Constants.Url.TABLE, "No table provided");
-        Table table = request.getBodyAs(Table.class);
+    table.setDatabaseByString(databaseName);
+    table.setName(tableName);
+    Table saved = service.create(table);
 
-        if (table == null)
-        {
-            table = new Table();
-        }
+    // Construct the response for create...
+    response.setResponseCreated();
 
-        table.setDatabaseByString(databaseName);
-        table.setName(tableName);
-        Table saved = service.create(table);
+    // enrich the resource with links, etc. here...
+    TokenResolver resolver = HyperExpress.bind(Constants.Url.TABLE, saved.getId().getTableName());
 
-        // Construct the response for create...
-        response.setResponseCreated();
+    // Include the Location header...
+    String locationPattern = request.getNamedUrl(HttpMethod.GET, Constants.Routes.TABLE);
+    response.addLocationHeader(LOCATION_BUILDER.build(locationPattern, resolver));
 
-        // enrich the resource with links, etc. here...
-        TokenResolver resolver = HyperExpress.bind(Constants.Url.TABLE, saved.getId().getTableName());
+    // Return the newly-created resource...
+    return saved;
+  }
 
-        // Include the Location header...
-        String locationPattern = request.getNamedUrl(HttpMethod.GET, Constants.Routes.TABLE);
-        response.addLocationHeader(LOCATION_BUILDER.build(locationPattern, resolver));
+  @ApiOperation(value = "read a particular  table",
+      notes = "This will return the details of the table provided in the route",
+      response = Table.class)
+  @ApiModelRequest(model = Table.class, required = false, modelName = " Table")
+  public Table read(Request request, Response response) {
+    String databaseName = request.getHeader(Constants.Url.DATABASE, "No database provided");
+    String tableName = request.getHeader(Constants.Url.TABLE, "No table supplied");
 
-        // Return the newly-created resource...
-        return saved;
-    }
+    Table table = service.read(databaseName, tableName);
 
-    @ApiOperation(value = "read a particular  table",
-            notes = "This will return the details of the table provided in the route",
-            response =  Table.class)
-    @ApiModelRequest(model =  Table.class, required = false, modelName = " Table")
-    public Table read(Request request, Response response)
-    {
-        String databaseName = request.getHeader(Constants.Url.DATABASE, "No database provided");
-        String tableName = request.getHeader(Constants.Url.TABLE, "No table supplied");
+    // enrich the entity with links, etc. here...
+    HyperExpress.bind(Constants.Url.TABLE, table.getId().getTableName());
 
-        Table table = service.read(databaseName, tableName);
+    return table;
+  }
 
-        // enrich the entity with links, etc. here...
-        HyperExpress.bind(Constants.Url.TABLE, table.getId().getTableName());
+  @ApiOperation(value = "read all the  tables",
+      notes = "This route will return all the table created", response = Table.class)
+  @ApiModelRequest(model = Table.class, required = false, modelName = " Table")
+  public List<Table> readAll(Request request, Response response) {
+    String databaseName = request.getHeader(Constants.Url.DATABASE, "No database provided");
 
-        return table;
-    }
+    HyperExpress.tokenBinder(new TokenBinder<Table>() {
+      @Override
+      public void bind(Table object, TokenResolver resolver) {
+        resolver.bind(Constants.Url.TABLE, object.getId().getTableName());
+      }
+    });
+    return service.readAll(databaseName);
+  }
 
-    @ApiOperation(value = "read all the  tables",
-            notes = "This route will return all the table created",
-            response =  Table.class)
-    @ApiModelRequest(model =  Table.class, required = false, modelName = " Table")
-    public List<Table> readAll(Request request, Response response)
-    {
-        String databaseName = request.getHeader(Constants.Url.DATABASE, "No database provided");
+  @ApiOperation(value = "update the  table",
+      notes = "This route should be used to update the details of the table",
+      response = Table.class)
+  @ApiModelRequest(model = Table.class, required = false, modelName = " Table")
+  public void update(Request request, Response response) {
+    String databaseName = request.getHeader(Constants.Url.DATABASE, "No database provided");
+    String tableName = request.getHeader(Constants.Url.TABLE, "No table provided");
+    Table table = request.getBodyAs(Table.class, "Table details not provided");
+    table.setDatabaseByString(databaseName);
+    table.setName(tableName);
+    service.update(table);
+    response.setResponseNoContent();
+  }
 
-        HyperExpress.tokenBinder(new TokenBinder<Table>()
-        {
-            @Override
-            public void bind(Table object, TokenResolver resolver)
-            {
-                resolver.bind(Constants.Url.TABLE, object.getId().getTableName());
-            }
-        });
-        return service.readAll(databaseName);
-    }
-
-    @ApiOperation(value = "update the  table",
-            notes = "This route should be used to update the details of the table",
-            response =  Table.class)
-    @ApiModelRequest(model =  Table.class, required = false, modelName = " Table")
-    public void update(Request request, Response response)
-    {
-        String databaseName = request.getHeader(Constants.Url.DATABASE, "No database provided");
-        String tableName = request.getHeader(Constants.Url.TABLE, "No table provided");
-        Table table = request.getBodyAs(Table.class, "Table details not provided");
-        table.setDatabaseByString(databaseName);
-        table.setName(tableName);
-        service.update(table);
-        response.setResponseNoContent();
-    }
-
-    @ApiOperation(value = "delete the  table",
-            notes = "delete the table Warning: once the table is deleted cant be restored",
-            response =  Table.class)
-    @ApiModelRequest(model =  Table.class, required = false, modelName = " Table")
-    public void delete(Request request, Response response)
-    {
-        String databaseName = request.getHeader(Constants.Url.DATABASE, "No database provided");
-        String tableName = request.getHeader(Constants.Url.TABLE, "No table provided");
-        service.delete(new Identifier(databaseName, tableName));
-        response.setResponseNoContent();
-    }
+  @ApiOperation(value = "delete the  table",
+      notes = "delete the table Warning: once the table is deleted cant be restored",
+      response = Table.class)
+  @ApiModelRequest(model = Table.class, required = false, modelName = " Table")
+  public void delete(Request request, Response response) {
+    String databaseName = request.getHeader(Constants.Url.DATABASE, "No database provided");
+    String tableName = request.getHeader(Constants.Url.TABLE, "No table provided");
+    service.delete(new Identifier(databaseName, tableName));
+    response.setResponseNoContent();
+  }
 }

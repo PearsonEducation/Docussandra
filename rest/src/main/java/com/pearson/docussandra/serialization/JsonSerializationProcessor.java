@@ -13,18 +13,15 @@ import com.strategicgains.hyperexpress.serialization.jackson.HalResourceSerializ
 import org.restexpress.ContentType;
 import org.restexpress.common.util.StringUtils;
 
-public class JsonSerializationProcessor
-        extends JacksonJsonProcessor
-{
+public class JsonSerializationProcessor extends JacksonJsonProcessor {
 
-    @Override
-    protected void initializeModule(SimpleModule module)
-    {
-        super.initializeModule(module);
-        module.addDeserializer(UUID.class, new UuidDeserializer());
-        module.addSerializer(UUID.class, new UuidSerializer());
-        module.addDeserializer(HalResource.class, new HalResourceDeserializer());
-        module.addSerializer(HalResource.class, new HalResourceSerializer());
-        addSupportedMediaTypes(StringUtils.join(",", ContentType.HAL_JSON, ContentType.SIREN));
-    }
+  @Override
+  protected void initializeModule(SimpleModule module) {
+    super.initializeModule(module);
+    module.addDeserializer(UUID.class, new UuidDeserializer());
+    module.addSerializer(UUID.class, new UuidSerializer());
+    module.addDeserializer(HalResource.class, new HalResourceDeserializer());
+    module.addSerializer(HalResource.class, new HalResourceSerializer());
+    addSupportedMediaTypes(StringUtils.join(",", ContentType.HAL_JSON, ContentType.SIREN));
+  }
 }

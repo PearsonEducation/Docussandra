@@ -8,19 +8,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * class to overwrite the onException method in the MessageObserver
- * to write errors to the log file of docussandra and not just to the console
+ * class to overwrite the onException method in the MessageObserver to write errors to the log file
+ * of docussandra and not just to the console
  */
 public class SimpleLogMessageObserver extends MessageObserver {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+  private Logger logger = LoggerFactory.getLogger(getClass());
 
-    public SimpleLogMessageObserver() {
-        new SimpleConsoleLogMessageObserver();
-    }
+  public SimpleLogMessageObserver() {
+    new SimpleConsoleLogMessageObserver();
+  }
 
-    protected void onException(Throwable exception, Request request, Response response) {
-        logger.error(exception.toString());
-        logger.error(request.getEffectiveHttpMethod().toString() + " " + request.getUrl() + " threw exception: " + exception.getClass().getSimpleName(), exception);
-    }
+  protected void onException(Throwable exception, Request request, Response response) {
+    logger.error(exception.toString());
+    logger.error(request.getEffectiveHttpMethod().toString() + " " + request.getUrl()
+        + " threw exception: " + exception.getClass().getSimpleName(), exception);
+  }
 }

@@ -18,39 +18,35 @@ import org.slf4j.LoggerFactory;
  *
  * @author https://github.com/JeffreyDeYoung
  */
-public class BuildInfoController
-{
+public class BuildInfoController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BuildInfoController.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(BuildInfoController.class);
 
-    public Object getBuildInfo(Request request, Response response)
-    {
-        response.setResponseStatus(HttpResponseStatus.OK);
-        response.setContentType(ContentType.JSON);
-        try
-        {
-            InputStream propsStream = this.getClass().getResourceAsStream("/git.properties");
-            StringBuilder buildInfo = new StringBuilder(IOUtils.toString(propsStream));
-            buildInfo.append("\n--------------\nActivated Plugins: \nNotifiers: \n");
-            PluginHolder ph = PluginHolder.getInstance();
-            for (NotifierPlugin plugin : ph.getNotifierPlugins())
-            {
-                buildInfo.append(plugin.getPluginName()).append(":").append(plugin.getClass().getCanonicalName()).append("\n");
-            }
-            buildInfo.append("Security: \n");
-            for (SecurityPlugin plugin : ph.getSecurityPlugins())
-            {
-                buildInfo.append(plugin.getPluginName()).append(":").append(plugin.getClass().getCanonicalName()).append("\n");
-            }
-            buildInfo.append("\n");
-            LOGGER.debug("Get build info called: " + buildInfo);
-            return buildInfo;
-        } catch (IOException e)
-        {
-            String message = "Could not read build info file.";
-            LOGGER.error(message, e);
-            return message;
-        }
+  public Object getBuildInfo(Request request, Response response) {
+    response.setResponseStatus(HttpResponseStatus.OK);
+    response.setContentType(ContentType.JSON);
+    try {
+      InputStream propsStream = this.getClass().getResourceAsStream("/git.properties");
+      StringBuilder buildInfo = new StringBuilder(IOUtils.toString(propsStream));
+      buildInfo.append("\n--------------\nActivated Plugins: \nNotifiers: \n");
+      PluginHolder ph = PluginHolder.getInstance();
+      for (NotifierPlugin plugin : ph.getNotifierPlugins()) {
+        buildInfo.append(plugin.getPluginName()).append(":")
+            .append(plugin.getClass().getCanonicalName()).append("\n");
+      }
+      buildInfo.append("Security: \n");
+      for (SecurityPlugin plugin : ph.getSecurityPlugins()) {
+        buildInfo.append(plugin.getPluginName()).append(":")
+            .append(plugin.getClass().getCanonicalName()).append("\n");
+      }
+      buildInfo.append("\n");
+      LOGGER.debug("Get build info called: " + buildInfo);
+      return buildInfo;
+    } catch (IOException e) {
+      String message = "Could not read build info file.";
+      LOGGER.error(message, e);
+      return message;
     }
+  }
 
 }

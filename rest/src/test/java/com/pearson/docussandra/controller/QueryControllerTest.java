@@ -13,18 +13,16 @@ import com.pearson.docussandra.testhelper.RestExpressManager;
  *
  * @author https://github.com/JeffreyDeYoung
  */
-public class QueryControllerTest extends AbstractQueryControllerTest
-{
+public class QueryControllerTest extends AbstractQueryControllerTest {
 
-    /**
-     * Constructor. Creates a new implementation of this test to be a functional
-     * test (testing against a mock Cassandra).
-     *
-     * @throws Exception
-     */
-    public QueryControllerTest() throws Exception
-    {
-        super(Fixtures.getInstance(true));
-        RestExpressManager.getManager().ensureRestExpressRunning(true);
-    }
+  /**
+   * Constructor. Creates a new implementation of this test to be a functional test (testing against
+   * a mock Cassandra).
+   *
+   * @throws Exception
+   */
+  public QueryControllerTest() throws Exception {
+    super(Fixtures.getInstance(true));
+    RestExpressManager.getManager().ensureRestExpressRunning(true);
+  }
 }

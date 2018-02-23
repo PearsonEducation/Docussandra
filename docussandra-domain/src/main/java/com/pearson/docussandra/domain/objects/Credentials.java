@@ -6,15 +6,14 @@ import com.strategicgains.syntaxe.annotation.Required;
  * @author https://github.com/tfredrich
  * @since Jan 25, 2015
  */
-public class Credentials
-{
+public class Credentials {
 
-    @Required("Database")
-    private DatabaseReference database;
+  @Required("Database")
+  private DatabaseReference database;
 
-    @Required("Username")
-    private String username;
+  @Required("Username")
+  private String username;
 
-    @Required("Password")
-    private String password;
+  @Required("Password")
+  private String password;
 }

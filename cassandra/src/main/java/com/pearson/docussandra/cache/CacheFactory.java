@@ -15,93 +15,86 @@ import org.slf4j.LoggerFactory;
  *
  * @author https://github.com/JeffreyDeYoung
  */
-public class CacheFactory
-{
+public class CacheFactory {
 
-    /**
-     * CacheManger for this entire application.
-     */
-    private static CacheManager manager = null;
-    /**
-     * Map containing all of our Caches.
-     */
-    private static ConcurrentHashMap<String, Cache> cacheMap = new ConcurrentHashMap<>();
-    /**
-     * Flag indicating if the CacheManager has been established or not.
-     */
-    private static boolean cacheManagerEstablished = false;
-    /**
-     * Logger.
-     */
-    private static final Logger logger = LoggerFactory.getLogger(CacheFactory.class);
+  /**
+   * CacheManger for this entire application.
+   */
+  private static CacheManager manager = null;
+  /**
+   * Map containing all of our Caches.
+   */
+  private static ConcurrentHashMap<String, Cache> cacheMap = new ConcurrentHashMap<>();
+  /**
+   * Flag indicating if the CacheManager has been established or not.
+   */
+  private static boolean cacheManagerEstablished = false;
+  /**
+   * Logger.
+   */
+  private static final Logger logger = LoggerFactory.getLogger(CacheFactory.class);
 
-    /**
-     * Constructor. Private for public static access only to methods.
-     */
-    private CacheFactory()
+  /**
+   * Constructor. Private for public static access only to methods.
+   */
+  private CacheFactory() {
+    ;
+  }
+
+  /**
+   * Establishes the cache if it doesn't exist.
+   */
+  private synchronized static void establishCacheManager() {
+    URL url = PreparedStatementFactory.class.getResource("/ehcache.xml");
+    logger.debug("Establishing cache manager with config file: " + url.getPath());
+    if (manager == null) {
+      manager = CacheManager.newInstance(url);
+    }
+    cacheManagerEstablished = true;
+  }
+
+  public static Cache getCache(String cacheName) {
+    if (!cacheManagerEstablished)// establish the manager if we don't have one yet
     {
-        ;
+      establishCacheManager();
     }
-
-    /**
-     * Establishes the cache if it doesn't exist.
-     */
-    private synchronized static void establishCacheManager()
+    // synchronized (CacheSynchronizer.getLockingObject(cacheName, Cache.class))
+    // {
+    Cache c = cacheMap.get(cacheName);// try to pull the cache from our map
+    if (c == null)// it doesn't exist yet
     {
-        URL url = PreparedStatementFactory.class.getResource("/ehcache.xml");
-        logger.debug("Establishing cache manager with config file: " + url.getPath());
-        if (manager == null)
-        {
-            manager = CacheManager.newInstance(url);
-        }
-        cacheManagerEstablished = true;
+      // lets create a new cache
+      c = manager.getCache(cacheName);
+      if (c == null) {
+        throw new RuntimeException(
+            "Cache is not defined: " + cacheName + ". This is a programming error.");
+      }
+      cacheMap.put(cacheName, c);
     }
+    return c;
+    // }
+  }
 
-    public static Cache getCache(String cacheName)
-    {
-        if (!cacheManagerEstablished)//establish the manager if we don't have one yet
-        {
-            establishCacheManager();
-        }
-        //synchronized (CacheSynchronizer.getLockingObject(cacheName, Cache.class))
-        //{
-            Cache c = cacheMap.get(cacheName);//try to pull the cache from our map
-            if (c == null)//it doesn't exist yet
-            {
-                //lets create a new cache
-                c = manager.getCache(cacheName);
-                if (c == null)
-                {
-                    throw new RuntimeException("Cache is not defined: "+cacheName+". This is a programming error.");
-                }
-                cacheMap.put(cacheName, c);
-            }
-            return c;
-       // }        
+  /**
+   * Shuts down the cache; only call upon application shutdown.
+   */
+  public static void shutdownCacheManger() {
+    if (manager != null) {
+      logger.info("Shutting down cache manager.");
+      manager.shutdown();
+      cacheMap = new ConcurrentHashMap<>();
+      cacheManagerEstablished = false;
     }
+  }
 
-    /**
-     * Shuts down the cache; only call upon application shutdown.
-     */
-    public static void shutdownCacheManger()
-    {
-        if (manager != null)
-        {
-            logger.info("Shutting down cache manager.");
-            manager.shutdown();
-            cacheMap = new ConcurrentHashMap<>();
-            cacheManagerEstablished = false;
-        }
+  /**
+   * Clears all caches we currently have. For testing use only.
+   */
+  public static void clearAllCaches() {
+    Enumeration e = cacheMap.elements();
+    while (e.hasMoreElements()) {
+      Cache c = (Cache) e.nextElement();
+      c.removeAll();
     }
-    
-    /**
-     * Clears all caches we currently have. For testing use only.
-     */
-    public static void clearAllCaches(){
-        Enumeration e = cacheMap.elements();
-        while(e.hasMoreElements()){
-            Cache c = (Cache)e.nextElement();
-            c.removeAll();
-        }
-    }
+  }
 }

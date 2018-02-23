@@ -26,67 +26,47 @@ import com.strategicgains.hyperexpress.HyperExpress;
 
 /**
  * Warning: Do not code format this file, it will make it harder to read.
+ * 
  * @author https://github.com/tfredrich
  * @since Jun 12, 2014
  */
-public class Relationships
-{
-	public static void define(RestExpress server)
-	{
-		Map<String, String> routes = server.getRouteUrlsByName();
+public class Relationships {
+  public static void define(RestExpress server) {
+    Map<String, String> routes = server.getRouteUrlsByName();
 
-		HyperExpress.relationships()
-		.forCollectionOf(Database.class)
-			.rel(SELF, routes.get(DATABASES))
+    HyperExpress.relationships().forCollectionOf(Database.class).rel(SELF, routes.get(DATABASES))
 
-		.forClass(Database.class)
-			.rel(SELF, routes.get(DATABASE))
-			.rel(UP, routes.get(DATABASES))
-			.rel("collections", routes.get(TABLES))
-				.title("The tables in this database")
+        .forClass(Database.class).rel(SELF, routes.get(DATABASE)).rel(UP, routes.get(DATABASES))
+        .rel("collections", routes.get(TABLES)).title("The tables in this database")
 
-		.forCollectionOf(Table.class)
-			.rel(SELF, routes.get(TABLES))
-			.rel(UP, routes.get(DATABASE))
-				.title("The database containing this table")
+        .forCollectionOf(Table.class).rel(SELF, routes.get(TABLES)).rel(UP, routes.get(DATABASE))
+        .title("The database containing this table")
 
-		.forClass(Table.class)
-			.rel(SELF, routes.get(TABLE))
-			.rel(UP, routes.get(TABLES))
-				.title("The entire list of tables in this database")
+        .forClass(Table.class).rel(SELF, routes.get(TABLE)).rel(UP, routes.get(TABLES))
+        .title("The entire list of tables in this database")
 
-                .forCollectionOf(Index.class)
-			.rel(SELF, routes.get(INDEXES))
-			.rel(UP, routes.get(TABLE))
-			.title("The collection that this index was created on.")
-        
-                .forClass(Index.class)
-			.rel(SELF, routes.get(INDEX))
-			.rel(UP, routes.get(INDEXES))
-				.title("The list of indexes for this table.")
-                
-                   //N/A -- this is a global status of all current indexing operations
-//                .forCollectionOf(IndexCreatedEvent.class)
-//			.rel(SELF, routes.get(INDEX))
-//			.rel(UP, routes.get(INDEXES))
-                        
-                .forClass(IndexCreatedEvent.class)
-			.rel(SELF, routes.get(INDEX_STATUS))
-			.rel(UP, routes.get(INDEX))
-                        .rel("index", routes.get(INDEX))
-				.title("The index for this status.")
-                
-			.rel("documents", routes.get(DOCUMENTS))
-				.title("The documents in this collection")
-                        
-		.forCollectionOf(LinkableDocument.class)
-//			.rel(SELF, routes.get(DOCUMENTS))
-			.rel(UP, routes.get(TABLE))
-				.title("The collection containing these documents")
+        .forCollectionOf(Index.class).rel(SELF, routes.get(INDEXES)).rel(UP, routes.get(TABLE))
+        .title("The collection that this index was created on.")
 
-		.forClass(LinkableDocument.class)
-			.rel(SELF, routes.get(DOCUMENT))
-			.rel(UP, routes.get(DOCUMENTS))
-				.title("The entire list of documents in this collection");
-	}
+        .forClass(Index.class).rel(SELF, routes.get(INDEX)).rel(UP, routes.get(INDEXES))
+        .title("The list of indexes for this table.")
+
+        // N/A -- this is a global status of all current indexing operations
+        // .forCollectionOf(IndexCreatedEvent.class)
+        // .rel(SELF, routes.get(INDEX))
+        // .rel(UP, routes.get(INDEXES))
+
+        .forClass(IndexCreatedEvent.class).rel(SELF, routes.get(INDEX_STATUS))
+        .rel(UP, routes.get(INDEX)).rel("index", routes.get(INDEX))
+        .title("The index for this status.")
+
+        .rel("documents", routes.get(DOCUMENTS)).title("The documents in this collection")
+
+        .forCollectionOf(LinkableDocument.class)
+        // .rel(SELF, routes.get(DOCUMENTS))
+        .rel(UP, routes.get(TABLE)).title("The collection containing these documents")
+
+        .forClass(LinkableDocument.class).rel(SELF, routes.get(DOCUMENT))
+        .rel(UP, routes.get(DOCUMENTS)).title("The entire list of documents in this collection");
+  }
 }

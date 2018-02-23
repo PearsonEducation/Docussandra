@@ -19,59 +19,55 @@ import org.slf4j.LoggerFactory;
  *
  * @author https://github.com/JeffreyDeYoung
  */
-public class QueryServiceTest
-{
+public class QueryServiceTest {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-    private QueryService instance;
-    private static Fixtures f;
+  private Logger logger = LoggerFactory.getLogger(this.getClass());
+  private QueryService instance;
+  private static Fixtures f;
 
-    public QueryServiceTest() throws Exception
-    {
-        f = Fixtures.getInstance();
-    }
+  public QueryServiceTest() throws Exception {
+    f = Fixtures.getInstance();
+  }
 
-    @Before
-    public void setUp()
-    {
-        f.clearTestTables();
-        f.createTestITables();
-        instance = new QueryService(new DatabaseRepositoryImpl(f.getSession()), new TableRepositoryImpl(f.getSession()), new QueryRepositoryImpl(f.getSession()));
-        IndexRepositoryImpl indexRepo = new IndexRepositoryImpl(f.getSession());
-        indexRepo.create(Fixtures.createTestIndexTwoField());
-    }
+  @Before
+  public void setUp() {
+    f.clearTestTables();
+    f.createTestITables();
+    instance = new QueryService(new DatabaseRepositoryImpl(f.getSession()),
+        new TableRepositoryImpl(f.getSession()), new QueryRepositoryImpl(f.getSession()));
+    IndexRepositoryImpl indexRepo = new IndexRepositoryImpl(f.getSession());
+    indexRepo.create(Fixtures.createTestIndexTwoField());
+  }
 
-    @AfterClass
-    public static void tearDown()
-    {
-        f.clearTestTables();
-    }
+  @AfterClass
+  public static void tearDown() {
+    f.clearTestTables();
+  }
 
-    /**
-     * Test of query method, of class QueryService.
-     */
-    @Test
-    public void testQuery() throws IndexParseException, FieldNotIndexedException
-    {
-        logger.debug("query");
-        Document doc = Fixtures.createTestDocument();
-        //put a test doc in
-        DocumentRepositoryImpl docRepo = new DocumentRepositoryImpl(f.getSession());
-        docRepo.create(doc);
-        List<Document> result = instance.query(Fixtures.DB, Fixtures.createTestQuery());
-        assertNotNull(result);
-        assertTrue(!result.isEmpty());
-        assertTrue(result.size() == 1);
-        Document res = result.get(0);
-        assertNotNull(res);
-        assertNotNull(res.getCreatedAt());
-        assertNotNull(res.getUpdatedAt());
-        assertNotNull(res.getUuid());
-        assertNotNull(res.getId());
-        assertNotNull(res.getObject());
-        BSONObject expected = doc.getObject();
-        BSONObject actual = res.getObject();
-        assertEquals(expected, actual);
-    }
+  /**
+   * Test of query method, of class QueryService.
+   */
+  @Test
+  public void testQuery() throws IndexParseException, FieldNotIndexedException {
+    logger.debug("query");
+    Document doc = Fixtures.createTestDocument();
+    // put a test doc in
+    DocumentRepositoryImpl docRepo = new DocumentRepositoryImpl(f.getSession());
+    docRepo.create(doc);
+    List<Document> result = instance.query(Fixtures.DB, Fixtures.createTestQuery());
+    assertNotNull(result);
+    assertTrue(!result.isEmpty());
+    assertTrue(result.size() == 1);
+    Document res = result.get(0);
+    assertNotNull(res);
+    assertNotNull(res.getCreatedAt());
+    assertNotNull(res.getUpdatedAt());
+    assertNotNull(res.getUuid());
+    assertNotNull(res.getId());
+    assertNotNull(res.getObject());
+    BSONObject expected = doc.getObject();
+    BSONObject actual = res.getObject();
+    assertEquals(expected, actual);
+  }
 
 }

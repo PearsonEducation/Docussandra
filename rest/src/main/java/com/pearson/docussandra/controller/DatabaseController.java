@@ -24,117 +24,103 @@ import com.strategicgains.hyperexpress.builder.UrlBuilder;
 /**
  * REST controller for Database entities.
  */
-public class DatabaseController
-{
+public class DatabaseController {
 
-    private static final UrlBuilder LOCATION_BUILDER = new UrlBuilder();
+  private static final UrlBuilder LOCATION_BUILDER = new UrlBuilder();
 
-    private DatabaseService databases;
+  private DatabaseService databases;
 
-    public DatabaseController(DatabaseService databaseService)
-    {
-        super();
-        this.databases = databaseService;
+  public DatabaseController(DatabaseService databaseService) {
+    super();
+    this.databases = databaseService;
+  }
+
+  @ApiOperation(value = "OPTIONS database",
+      notes = "this http verb is used give us what other verbs can be used")
+  public void options(Request request, Response response) {
+    if (DATABASES.equals(request.getResolvedRoute().getName())) {
+      response.addHeader(HttpHeaders.Names.ALLOW, "GET");
+    } else if (DATABASE.equals(request.getResolvedRoute().getName())) {
+      response.addHeader(HttpHeaders.Names.ALLOW, "GET, DELETE, PUT, POST");
+    }
+  }
+
+  @ApiOperation(value = "Create database",
+      notes = "This  method creates a  table it accepts name and description in the request body but both are optional",
+      response = Database.class)
+  @ApiModelRequest(model = Database.class, required = false, modelName = "Database")
+  public Database create(Request request, Response response) {
+    String name = request.getHeader(Constants.Url.DATABASE, "No database name provided");
+    Database database = request.getBodyAs(Database.class);
+
+    if (database == null) {
+      database = new Database();
     }
 
-    @ApiOperation(value = "OPTIONS database",
-            notes = "this http verb is used give us what other verbs can be used")
-    public void options(Request request, Response response)
-    {
-        if (DATABASES.equals(request.getResolvedRoute().getName()))
-        {
-            response.addHeader(HttpHeaders.Names.ALLOW, "GET");
-        } else if (DATABASE.equals(request.getResolvedRoute().getName()))
-        {
-            response.addHeader(HttpHeaders.Names.ALLOW, "GET, DELETE, PUT, POST");
-        }
-    }
+    database.setName(name);
+    Database saved = databases.create(database);
 
-    @ApiOperation(value = "Create database",
-            notes = "This  method creates a  table it accepts name and description in the request body but both are optional",
-            response = Database.class)
-    @ApiModelRequest(model = Database.class, required = false, modelName = "Database")
-    public Database create(Request request, Response response)
-    {
-        String name = request.getHeader(Constants.Url.DATABASE, "No database name provided");
-        Database database = request.getBodyAs(Database.class);
+    // Construct the response for create...
+    response.setResponseCreated();
 
-        if (database == null)
-        {
-            database = new Database();
-        }
+    // enrich the resource with links, etc. here...
+    TokenResolver resolver = HyperExpress.bind(Constants.Url.DATABASE, saved.getName());
 
-        database.setName(name);
-        Database saved = databases.create(database);
+    // Include the Location header...
+    String locationPattern = request.getNamedUrl(HttpMethod.GET, Constants.Routes.DATABASE);
+    response.addLocationHeader(LOCATION_BUILDER.build(locationPattern, resolver));
 
-        // Construct the response for create...
-        response.setResponseCreated();
+    // Return the newly-created resource...
+    return saved;
+  }
 
-        // enrich the resource with links, etc. here...
-        TokenResolver resolver = HyperExpress.bind(Constants.Url.DATABASE, saved.getName());
+  @ApiOperation(value = "read a database",
+      notes = "This will return the details of the database provided in the route",
+      response = Database.class)
+  @ApiModelRequest(model = Database.class, required = false, modelName = "Database")
+  public Database read(Request request, Response response) {
+    String name = request.getHeader(Constants.Url.DATABASE, "No database provided");
+    Database database = databases.read(name);
 
-        // Include the Location header...
-        String locationPattern = request.getNamedUrl(HttpMethod.GET, Constants.Routes.DATABASE);
-        response.addLocationHeader(LOCATION_BUILDER.build(locationPattern, resolver));
+    // enrich the entity with links, etc. here...
+    HyperExpress.bind(Constants.Url.DATABASE, database.getName());
 
-        // Return the newly-created resource...
-        return saved;
-    }
+    return database;
+  }
 
-    @ApiOperation(value = "read a database",
-            notes = "This will return the details of the database provided in the route",
-            response = Database.class)
-    @ApiModelRequest(model = Database.class, required = false, modelName = "Database")
-    public Database read(Request request, Response response)
-    {
-        String name = request.getHeader(Constants.Url.DATABASE, "No database provided");
-        Database database = databases.read(name);
+  @ApiOperation(value = "read all the databases",
+      notes = "This route will return all the database created", response = Database.class)
+  @ApiModelRequest(model = Database.class, required = false, modelName = "Database")
+  public List<Database> readAll(Request request, Response response) {
+    HyperExpress.tokenBinder(new TokenBinder<Database>() {
+      @Override
+      public void bind(Database object, TokenResolver resolver) {
+        resolver.bind(Constants.Url.DATABASE, object.getName());
+      }
+    });
+    return databases.readAll();
+  }
 
-        // enrich the entity with links, etc. here...
-        HyperExpress.bind(Constants.Url.DATABASE, database.getName());
+  @ApiOperation(value = "read all the databases",
+      notes = "This route should be used to update the details of the database",
+      response = Database.class)
+  @ApiModelRequest(model = Database.class, required = false, modelName = "Database")
+  public void update(Request request, Response response) {
+    String name = request.getHeader(Constants.Url.DATABASE, "No database name provided");
+    Database database = request.getBodyAs(Database.class, "Database details not provided");
 
-        return database;
-    }
+    database.setName(name);
+    databases.update(database);
+    response.setResponseNoContent();
+  }
 
-    @ApiOperation(value = "read all the databases",
-            notes = "This route will return all the database created",
-            response = Database.class)
-    @ApiModelRequest(model = Database.class, required = false, modelName = "Database")
-    public List<Database> readAll(Request request, Response response)
-    {
-        HyperExpress.tokenBinder(new TokenBinder<Database>()
-        {
-            @Override
-            public void bind(Database object, TokenResolver resolver)
-            {
-                resolver.bind(Constants.Url.DATABASE, object.getName());
-            }
-        });
-        return databases.readAll();
-    }
-
-    @ApiOperation(value = "read all the databases",
-            notes = "This route should be used to update the details of the database",
-            response = Database.class)
-    @ApiModelRequest(model = Database.class, required = false, modelName = "Database")
-    public void update(Request request, Response response)
-    {
-        String name = request.getHeader(Constants.Url.DATABASE, "No database name provided");
-        Database database = request.getBodyAs(Database.class, "Database details not provided");
-
-        database.setName(name);
-        databases.update(database);
-        response.setResponseNoContent();
-    }
-
-    @ApiOperation(value = "read all the databases",
-            notes = "delete the  database Warning: once the  database is deleted cant be restored",
-            response = Database.class)
-    @ApiModelRequest(model = Database.class, required = false, modelName = "Database")
-    public void delete(Request request, Response response)
-    {
-        String name = request.getHeader(Constants.Url.DATABASE, "No database name provided");
-        databases.delete(name);
-        response.setResponseNoContent();
-    }
+  @ApiOperation(value = "read all the databases",
+      notes = "delete the  database Warning: once the  database is deleted cant be restored",
+      response = Database.class)
+  @ApiModelRequest(model = Database.class, required = false, modelName = "Database")
+  public void delete(Request request, Response response) {
+    String name = request.getHeader(Constants.Url.DATABASE, "No database name provided");
+    databases.delete(name);
+    response.setResponseNoContent();
+  }
 }

@@ -9,23 +9,22 @@ import java.util.List;
  *
  * @author https://github.com/JeffreyDeYoung
  */
-public interface DatabaseRepository
-{
+public interface DatabaseRepository {
 
-    Database create(Database entity);
+  Database create(Database entity);
 
-    void delete(Database entity);
+  void delete(Database entity);
 
-    void delete(Identifier identifier);
+  void delete(Identifier identifier);
 
-    boolean exists(Identifier identifier);
+  boolean exists(Identifier identifier);
 
-    Database read(Identifier identifier);
+  Database read(Identifier identifier);
 
-    List<Database> readAll();
+  List<Database> readAll();
 
-    List<Database> readAll(Identifier id);
+  List<Database> readAll(Identifier id);
 
-    Database update(Database entity);
+  Database update(Database entity);
 
 }

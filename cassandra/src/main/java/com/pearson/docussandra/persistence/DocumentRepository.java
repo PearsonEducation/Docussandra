@@ -9,21 +9,20 @@ import com.pearson.docussandra.domain.objects.QueryResponseWrapper;
  *
  * @author https://github.com/JeffreyDeYoung
  */
-public interface DocumentRepository
-{
+public interface DocumentRepository {
 
-    Document create(Document entity);
+  Document create(Document entity);
 
-    void delete(Document entity);
+  void delete(Document entity);
 
-    void delete(Identifier id);
+  void delete(Identifier id);
 
-    boolean exists(Identifier identifier);
+  boolean exists(Identifier identifier);
 
-    Document read(Identifier identifier);
+  Document read(Identifier identifier);
 
-    QueryResponseWrapper readAll(String database, String tableString, int limit, long offset);
+  QueryResponseWrapper readAll(String database, String tableString, int limit, long offset);
 
-    Document update(Document entity);
+  Document update(Document entity);
 
 }

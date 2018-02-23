@@ -15,48 +15,37 @@ import static org.junit.Assert.*;
  *
  * @author https://github.com/JeffreyDeYoung
  */
-public class PreparedStatementFactoryTest
-{
+public class PreparedStatementFactoryTest {
 
-    private Fixtures f;
+  private Fixtures f;
 
-    public PreparedStatementFactoryTest() throws Exception
-    {
-        f = Fixtures.getInstance();
-    }
+  public PreparedStatementFactoryTest() throws Exception {
+    f = Fixtures.getInstance();
+  }
 
-    @BeforeClass
-    public static void setUpClass()
-    {
-    }
+  @BeforeClass
+  public static void setUpClass() {}
 
-    @AfterClass
-    public static void tearDownClass()
-    {
-    }
+  @AfterClass
+  public static void tearDownClass() {}
 
-    @Before
-    public void setUp()
-    {
-    }
+  @Before
+  public void setUp() {}
 
-    @After
-    public void tearDown()
-    {
-    }
+  @After
+  public void tearDown() {}
 
-    /**
-     * Test of getPreparedStatement method, of class PreparedStatementFactory.
-     */
-    @Test
-    public void testGetPreparedStatement()
-    {
-        System.out.println("getPreparedStatement");
-        String query = "select * from docussandra.sys_db";
-        PreparedStatement result = PreparedStatementFactory.getPreparedStatement(query, f.getSession());
-        assertNotNull(result);
-        result = PreparedStatementFactory.getPreparedStatement(query, f.getSession());
-        assertNotNull(result);
-    }
+  /**
+   * Test of getPreparedStatement method, of class PreparedStatementFactory.
+   */
+  @Test
+  public void testGetPreparedStatement() {
+    System.out.println("getPreparedStatement");
+    String query = "select * from docussandra.sys_db";
+    PreparedStatement result = PreparedStatementFactory.getPreparedStatement(query, f.getSession());
+    assertNotNull(result);
+    result = PreparedStatementFactory.getPreparedStatement(query, f.getSession());
+    assertNotNull(result);
+  }
 
 }

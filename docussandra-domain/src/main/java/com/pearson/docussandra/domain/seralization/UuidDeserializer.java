@@ -8,14 +8,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 
-public class UuidDeserializer
-        extends JsonDeserializer<UUID>
-{
+public class UuidDeserializer extends JsonDeserializer<UUID> {
 
-    @Override
-    public UUID deserialize(JsonParser json, DeserializationContext context)
-            throws IOException, JsonProcessingException
-    {
-        return UUID.fromString(json.getText());
-    }
+  @Override
+  public UUID deserialize(JsonParser json, DeserializationContext context)
+      throws IOException, JsonProcessingException {
+    return UUID.fromString(json.getText());
+  }
 }

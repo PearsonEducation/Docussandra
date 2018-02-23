@@ -10,77 +10,70 @@ import com.pearson.docussandra.domain.objects.Identifier;
  *
  * @author https://github.com/JeffreyDeYoung
  */
-public abstract class AbstractCassandraRepository
-{
+public abstract class AbstractCassandraRepository {
 
-    /**
-     * A pre-configured Session instance.
-     */
-    private Session session;
-    /**
-     * The name of the Cassandra table entities are stored in.
-     */
-    private String table;
+  /**
+   * A pre-configured Session instance.
+   */
+  private Session session;
+  /**
+   * The name of the Cassandra table entities are stored in.
+   */
+  private String table;
 
-    /**
-     * Default constructor.
-     */
-    public AbstractCassandraRepository()
-    {
+  /**
+   * Default constructor.
+   */
+  public AbstractCassandraRepository() {
 
-    }
+  }
 
-    /**
-     * Constructor.
-     *
-     * @param session a pre-configured Session instance.
-     * @param tableName the name of the Cassandra table entities are stored in.
-     */
-    public AbstractCassandraRepository(Session session, String tableName)
-    {
-        this.session = session;
-        this.table = tableName;
-    }
+  /**
+   * Constructor.
+   *
+   * @param session a pre-configured Session instance.
+   * @param tableName the name of the Cassandra table entities are stored in.
+   */
+  public AbstractCassandraRepository(Session session, String tableName) {
+    this.session = session;
+    this.table = tableName;
+  }
 
-    /**
-     * Constructor.
-     *
-     * @param session a pre-configured Session instance.
-     */
-    public AbstractCassandraRepository(Session session)
-    {
-        this.session = session;
-    }
+  /**
+   * Constructor.
+   *
+   * @param session a pre-configured Session instance.
+   */
+  public AbstractCassandraRepository(Session session) {
+    this.session = session;
+  }
 
-    /**
-     * Gets the database session.
-     *
-     * @return
-     */
-    protected Session getSession()
-    {
-        return session;
-    }
+  /**
+   * Gets the database session.
+   *
+   * @return
+   */
+  protected Session getSession() {
+    return session;
+  }
 
-    /**
-     * Gets the database table.
-     *
-     * @return
-     */
-    protected String getTable()
-    {
-        return table;
-    }
+  /**
+   * Gets the database table.
+   *
+   * @return
+   */
+  protected String getTable() {
+    return table;
+  }
 
-    /**
-     * Binds an identifier object.
-     *
-     * @param bs
-     * @param identifier
-     */
-    protected void bindIdentifier(BoundStatement bs, Identifier identifier)
-    {
-        bs.bind(identifier.components().toArray());
-    }
+  /**
+   * Binds an identifier object.
+   *
+   * @param bs
+   * @param identifier
+   */
+  protected void bindIdentifier(BoundStatement bs, Identifier identifier) {
+    bs.bind(identifier.components().toArray());
+  }
 
 }

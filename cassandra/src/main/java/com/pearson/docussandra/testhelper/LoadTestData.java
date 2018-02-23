@@ -17,30 +17,26 @@ import org.slf4j.LoggerFactory;
  *
  * @author https://github.com/JeffreyDeYoung
  */
-public class LoadTestData
-{
+public class LoadTestData {
 
-    private static Logger logger = LoggerFactory.getLogger(LoadTestData.class);
+  private static Logger logger = LoggerFactory.getLogger(LoadTestData.class);
 
-    private Fixtures f;
+  private Fixtures f;
 
-    public LoadTestData() throws Exception
-    {
-        f = Fixtures.getInstance(false);//don't mock cassandra here
-    }
+  public LoadTestData() throws Exception {
+    f = Fixtures.getInstance(false);// don't mock cassandra here
+  }
 
-    public void go() throws Exception
-    {
-        System.out.println("Not yet implemented with our current test data.");
-        System.exit(0);
-    }
+  public void go() throws Exception {
+    System.out.println("Not yet implemented with our current test data.");
+    System.exit(0);
+  }
 
-    public static void main(String[] args) throws Exception
-    {
-        System.out.println("Loading test data...");
-        LoadTestData ltd = new LoadTestData();
-        ltd.go();
+  public static void main(String[] args) throws Exception {
+    System.out.println("Loading test data...");
+    LoadTestData ltd = new LoadTestData();
+    ltd.go();
 
-    }
+  }
 
 }

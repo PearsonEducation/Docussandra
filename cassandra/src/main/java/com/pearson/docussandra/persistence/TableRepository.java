@@ -9,27 +9,26 @@ import java.util.List;
  *
  * @author https://github.com/JeffreyDeYoung
  */
-public interface TableRepository
-{
+public interface TableRepository {
 
-    long countAllTables(String database);
+  long countAllTables(String database);
 
-    long countTableSize(String database, String tableName);
+  long countTableSize(String database, String tableName);
 
-    Table create(Table entity);
+  Table create(Table entity);
 
-    void delete(Table entity);
+  void delete(Table entity);
 
-    void delete(Identifier id);
+  void delete(Identifier id);
 
-    boolean exists(Identifier identifier);
+  boolean exists(Identifier identifier);
 
-    Table read(Identifier identifier);
+  Table read(Identifier identifier);
 
-    List<Table> readAll(Identifier id);
+  List<Table> readAll(Identifier id);
 
-    List<Table> readAll();
-    
-    Table update(Table entity);
-    
+  List<Table> readAll();
+
+  Table update(Table entity);
+
 }
