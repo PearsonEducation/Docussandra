@@ -6,7 +6,7 @@
     <url>https://github.com/tfredrich/docussandra</url>
     <groupId>com.pearson.docussandra</groupId>
     <artifactId>docussandra-parent</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.4-SNAPSHOT</version>
     <packaging>pom</packaging>
     
     <distributionManagement>
