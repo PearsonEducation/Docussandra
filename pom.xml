@@ -26,12 +26,12 @@
         <repository>
             <id>docussandra-snapshots</id>
             <name>Docussandra Snapshot Artifacts</name>
-            <url>http://devops-tools.pearson.com/nexus-deps/content/repositories/snapshots/</url>
+            <url>https://devops-tools.pearson.com/nexus-deps/content/repositories/snapshots/</url>
         </repository>
         <repository>
             <id>docussandra-releases</id>
             <name>Docussandra Released Artifacts</name>
-            <url>http://devops-tools.pearson.com/nexus-master/content/repositories/releases/</url>
+            <url>https://devops-tools.pearson.com/nexus-master/content/repositories/releases/</url>
         </repository>
     </repositories>
 	
